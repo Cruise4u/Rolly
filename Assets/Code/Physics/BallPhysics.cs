@@ -33,6 +33,7 @@ public class BallPhysics : MonoBehaviour
     public void Move(Vector3 direction, float axisValue)
     {
         rb.AddForce(direction * axisValue * moveForce * Time.fixedDeltaTime, forceMode);
+        Debug.Log("Moving Ball!");
     }
 
     //Add a force of [ForceMode] to the object

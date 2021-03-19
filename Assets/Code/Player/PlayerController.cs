@@ -28,19 +28,23 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            ballPhysics.Move(Vector3.right, 1.0f);
+            OnPassingInformation.Invoke(Vector3.right, 1.0f);
+            Debug.Log("Request for Move!");
         }
         if (Input.GetKey(KeyCode.S))
         {
-            ballPhysics.Move(Vector3.right, -1.0f);
+            OnPassingInformation.Invoke(Vector3.right, -1.0f);
+            Debug.Log("Request for Move!");
         }
         if (Input.GetKey(KeyCode.D))
         {
-            ballPhysics.Move(Vector3.forward, -1.0f);
+            OnPassingInformation.Invoke(Vector3.forward, -1.0f);
+            Debug.Log("Request for Move!");
         }
         if (Input.GetKey(KeyCode.A))
         {
-            ballPhysics.Move(Vector3.forward, 1.0f);
+            OnPassingInformation.Invoke(Vector3.forward, 1.0f);
+            Debug.Log("Request for Move!");
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
