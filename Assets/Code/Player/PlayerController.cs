@@ -14,9 +14,7 @@ public class PlayerController : MonoBehaviour
     public FixedJoystick playerJoystick;
     public bool isInputBlocked;
 
-
-
-
+    public Action<Vector3,float> OnPassingInformation;
 
     // Set values for physics
     public void InitializeController()
@@ -57,21 +55,20 @@ public class PlayerController : MonoBehaviour
     {
         if (playerJoystick.Horizontal > 0.1f)
         {
-            ballPhysics.Move(Vector3.forward, -1.0f);
+            OnPassingInformation.Invoke(Vector3.forward,-1.0f);
         }
         if (playerJoystick.Horizontal < -0.1f)
         {
-            ballPhysics.Move(Vector3.forward, 1.0f);
+            OnPassingInformation.Invoke(Vector3.forward, 1.0f);
         }
         if (playerJoystick.Vertical > 0.1f)
         {
-            ballPhysics.Move(Vector3.right, 1.0f);
+            OnPassingInformation.Invoke(Vector3.right, 1.0f);
         }
         if (playerJoystick.Vertical < -0.1f)
         {
-            ballPhysics.Move(Vector3.right, -1.0f);
+            OnPassingInformation.Invoke(Vector3.right, -1.0f);
         }
-
     }
 
     //Call the Jump action from the ball physics
@@ -91,14 +88,16 @@ public class PlayerController : MonoBehaviour
 
     public void Start()
     {
-
+        OnPassingInformation += ballPhysics.Move;
+        if (gameManager.playerDeviceType == DeviceType.Handheld)
+        {
+            Screen.orientation = gameManager.playerDeviceOrientation;
+        }
     }
 
-    //Every timestep(x times per frame)
-    //Check the virtual joystick input
-    public void FixedUpdate()
+    public void Update()
     {
-        if(gameManager.playerDeviceType == DeviceType.Desktop)
+        if (gameManager.playerDeviceType == DeviceType.Desktop)
         {
             KeyboardInput();
             if (ballPhysics.isBreaking == true)
@@ -108,17 +107,11 @@ public class PlayerController : MonoBehaviour
         }
         else if (gameManager.playerDeviceType == DeviceType.Handheld)
         {
-            Screen.orientation = gameManager.playerDeviceOrientation;
             JoystickInput();
-            if(ballPhysics.isBreaking == true)
+            if (ballPhysics.isBreaking == true)
             {
                 ballPhysics.BreakMove();
             }
         }
-    }
-
-    public void Update()
-    {
-        
     }
 }
