@@ -12,29 +12,10 @@ public class PlayerController : MonoBehaviour
     public GameManager gameManager;
     public BallPhysics ballPhysics;
     public FixedJoystick playerJoystick;
-    public bool isBreaking;
+    public bool isInputBlocked;
 
-    public SimpleInput simpleInput;
 
-    public void NewInputButton()
-    {
-        if (SimpleInput.GetButton("Top"))
-        {
-            ballPhysics.Move(Vector3.right, 1.0f);
-        }
-        if (SimpleInput.GetButton("Bottom"))
-        {
-            ballPhysics.Move(Vector3.right, -1.0f);
-        }
-        if (SimpleInput.GetButton("Right"))
-        {
-            ballPhysics.Move(Vector3.forward, -1.0f);
-        }
-        if (SimpleInput.GetButton("Left"))
-        {
-            ballPhysics.Move(Vector3.forward, 1.0f);
-        }
-    }
+
 
 
     // Set values for physics
@@ -120,7 +101,7 @@ public class PlayerController : MonoBehaviour
         if(gameManager.playerDeviceType == DeviceType.Desktop)
         {
             KeyboardInput();
-            if (isBreaking == true)
+            if (ballPhysics.isBreaking == true)
             {
                 ballPhysics.BreakMove();
             }
@@ -129,13 +110,15 @@ public class PlayerController : MonoBehaviour
         {
             Screen.orientation = gameManager.playerDeviceOrientation;
             JoystickInput();
-            if(isBreaking == true)
+            if(ballPhysics.isBreaking == true)
             {
                 ballPhysics.BreakMove();
             }
         }
-        NewInputButton();
     }
 
-
+    public void Update()
+    {
+        
+    }
 }

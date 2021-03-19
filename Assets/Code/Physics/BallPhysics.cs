@@ -3,16 +3,14 @@ using UnityEngine;
 
 public class BallPhysics : MonoBehaviour
 {
+    public Rigidbody rb;
     public ForceMode forceMode;
     public ForceMode jumpMode;
 
-    public Rigidbody rb;
     public bool isInAir;
+    public bool isBreaking;
     public float moveForce;
     public float jumpForce;
-
-
-
 
     //Activate the ball physics..
     public void ActivatePhysics()
@@ -48,7 +46,7 @@ public class BallPhysics : MonoBehaviour
     {
         if(rb.velocity.magnitude > 1)
         {
-            rb.AddForce(-rb.velocity * moveForce * Time.fixedDeltaTime * 0.5f, forceMode);
+            rb.AddForce(-rb.velocity * moveForce/3 * Time.fixedDeltaTime , forceMode);
             Debug.Log("Breaking!");
         }
     }
@@ -69,6 +67,5 @@ public class BallPhysics : MonoBehaviour
             isInAir = true;
         }
     }
-
 }
 

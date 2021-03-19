@@ -4,8 +4,10 @@ using Bolt;
 
 public class GameManager : MonoBehaviour
 {
+    public TimeController timeController;
     public PlayerController playerControllerReference;
-    public bool isGameStarted;
+    public bool isLevelStarted;
+    public bool isLevelFinished;
 
     //Reference to device type being used
     //For example, is a mobile phone or a PC?
@@ -32,9 +34,15 @@ public class GameManager : MonoBehaviour
         Variables.Application.Set("playerControllerObject", playerControllerReference);
     }
 
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     public void Start()
     {
         playerDeviceType = GetPlayerDeviceByType();
+        timeController.StartCoroutine(timeController.PregameCountdown(isLevelStarted));
     }
 
     public void Awake()
@@ -42,13 +50,5 @@ public class GameManager : MonoBehaviour
         InitializeObjectsConfiguration();
     }
 
-    public void StartGame()
-    {
-        isGameStarted = true;
-    }
 
-    public void RestartLevel()
-    {
-        SceneManager.LoadScene(0);
-    }
 }
