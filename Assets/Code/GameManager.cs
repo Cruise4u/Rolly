@@ -41,8 +41,8 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        playerDeviceType = GetPlayerDeviceByType();
-        timeController.StartCoroutine(timeController.PregameCountdown(isLevelStarted));
+        //playerDeviceType = GetPlayerDeviceByType();
+        //timeController.StartCoroutine(timeController.PregameCountdown(isLevelStarted));
     }
 
     public void Awake()

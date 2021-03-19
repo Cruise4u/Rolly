@@ -12,6 +12,9 @@ public class BallPhysics : MonoBehaviour
     public float moveForce;
     public float jumpForce;
 
+    public Action<Vector3,float> someaction;
+
+
     //Activate the ball physics..
     public void ActivatePhysics()
     {
@@ -48,6 +51,17 @@ public class BallPhysics : MonoBehaviour
         {
             rb.AddForce(-rb.velocity * moveForce/3 * Time.fixedDeltaTime , forceMode);
             Debug.Log("Breaking!");
+        }
+    }
+
+    Action OnInputTriggered;
+
+    public void FixedUpdate()
+    {
+        var inputFunc = FindObjectOfType<PlayerController>().OnPassingInformation;
+        if(inputFunc != null)
+        {
+            inputFunc = (direction, speed) => Move(direction, speed);
         }
     }
 
