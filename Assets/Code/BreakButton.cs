@@ -9,11 +9,11 @@ public class BreakButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        playerController.isBreaking = true;
+        playerController.ballPhysics.isBreaking = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        playerController.isBreaking = false;
+        playerController.ballPhysics.isBreaking = false;
     }
 }
