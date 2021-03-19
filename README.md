@@ -1,2 +1,2 @@
-# Rolly
-Rolling ball game for mobile
+# Platy-repo
+ Mobile world-saving game

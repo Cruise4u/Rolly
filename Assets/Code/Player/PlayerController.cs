@@ -2,20 +2,49 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    // References to physics and joystick controller objects
+    public GameManager gameManager;
     public BallPhysics ballPhysics;
     public FixedJoystick playerJoystick;
+    public bool isBreaking;
+
+    public SimpleInput simpleInput;
+
+    public void NewInputButton()
+    {
+        if (SimpleInput.GetButton("Top"))
+        {
+            ballPhysics.Move(Vector3.right, 1.0f);
+        }
+        if (SimpleInput.GetButton("Bottom"))
+        {
+            ballPhysics.Move(Vector3.right, -1.0f);
+        }
+        if (SimpleInput.GetButton("Right"))
+        {
+            ballPhysics.Move(Vector3.forward, -1.0f);
+        }
+        if (SimpleInput.GetButton("Left"))
+        {
+            ballPhysics.Move(Vector3.forward, 1.0f);
+        }
+    }
 
 
-    public DeviceType playerDevice;
-
-    public void InitializeController() 
+    // Set values for physics
+    public void InitializeController()
     {
         //ballPhysics.SetPhysicsValue();
     }
 
+    //Check if a key was pressed and what action to trigger depending on the input
+    //It either move or jump
     public void KeyboardInput()
     {
         if (Input.GetKey(KeyCode.W))
@@ -40,6 +69,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //If the value of the virtual joystick it should perform any action
+    //It needs to be higher than the "Deadzone" for the virtual joystick
+    //It either move or jump
     public void JoystickInput()
     {
         if (playerJoystick.Horizontal > 0.1f)
@@ -58,24 +90,52 @@ public class PlayerController : MonoBehaviour
         {
             ballPhysics.Move(Vector3.right, -1.0f);
         }
+
     }
 
+    //Call the Jump action from the ball physics
+    //
     public void JumpButton()
     {
         ballPhysics.Jump();
     }
 
+    //Load the scene from SceneManager in GameManager object
+    //
+    public void RestartLevelButton()
+    {
+        var gameManager = FindObjectOfType<GameManager>();
+        gameManager.RestartLevel();
+    }
+
+    public void Start()
+    {
+
+    }
+
+    //Every timestep(x times per frame)
+    //Check the virtual joystick input
     public void FixedUpdate()
     {
-        if(playerDevice == DeviceType.Desktop)
+        if(gameManager.playerDeviceType == DeviceType.Desktop)
         {
             KeyboardInput();
+            if (isBreaking == true)
+            {
+                ballPhysics.BreakMove();
+            }
         }
-        else if (playerDevice == DeviceType.Handheld)
+        else if (gameManager.playerDeviceType == DeviceType.Handheld)
         {
+            Screen.orientation = gameManager.playerDeviceOrientation;
             JoystickInput();
+            if(isBreaking == true)
+            {
+                ballPhysics.BreakMove();
+            }
         }
+        NewInputButton();
     }
+
+
 }
-
-

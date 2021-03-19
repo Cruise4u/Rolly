@@ -7,23 +7,10 @@ public class GameManager : MonoBehaviour
     public PlayerController playerControllerReference;
     public bool isGameStarted;
 
-
-    public void InitializeObjectsConfiguration()
-    {
-        Variables.Application.Set("gameManagerObject", gameObject);
-        Variables.Application.Set("playerControllerObject", playerControllerReference);
-    }
-
-
-    public void Start()
-    {
-        playerControllerReference.playerDevice = GetPlayerDeviceByType();
-    }
-
-    public void Awake()
-    {
-        InitializeObjectsConfiguration();
-    }
+    //Reference to device type being used
+    //For example, is a mobile phone or a PC?
+    public DeviceType playerDeviceType;
+    public ScreenOrientation playerDeviceOrientation;
 
     public DeviceType GetPlayerDeviceByType()
     {
@@ -37,6 +24,22 @@ public class GameManager : MonoBehaviour
             currentDevice = DeviceType.Handheld;
         }
         return currentDevice;
+    }
+
+    public void InitializeObjectsConfiguration()
+    {
+        Variables.Application.Set("gameManagerObject", gameObject);
+        Variables.Application.Set("playerControllerObject", playerControllerReference);
+    }
+
+    public void Start()
+    {
+        playerDeviceType = GetPlayerDeviceByType();
+    }
+
+    public void Awake()
+    {
+        InitializeObjectsConfiguration();
     }
 
     public void StartGame()
