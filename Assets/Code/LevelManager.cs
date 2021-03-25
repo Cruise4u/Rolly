@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
 
     public bool isLevelStarted;
     public bool isLevelFinished;
+    public bool boolean;
 
     public void OnEnable()
     {
