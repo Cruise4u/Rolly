@@ -51,8 +51,7 @@ public class CameraRig
 
     public void Zoom(float zoomSpeed,float minZoom,float maxZoom)
     {
-        currentZoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
-        currentZoom = Mathf.Clamp(currentZoom,minZoom, maxZoom);
+        currentZoom = 4.5f;
     }
 
     public void SmoothCameraPosition(Vector3 cameraOffset, float cameraPitch)

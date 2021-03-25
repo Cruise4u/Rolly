@@ -3,16 +3,21 @@ using UnityEngine;
 
 public class BallPhysics : MonoBehaviour
 {
+    //References to other objects
+    public GameManager gameManager;
+    public PlayerController playerController;
     public Rigidbody rb;
-    public ForceMode forceMode;
-    public ForceMode jumpMode;
 
+    //condition variables to check if is stopping or if it's in air
     public bool isInAir;
     public bool isBreaking;
+
+    public Vector3 ballDirection;
+    public float inputAxisValue;
     public float moveForce;
     public float jumpForce;
-
-    public Action<Vector3,float> someaction;
+    public ForceMode forceMode;
+    public ForceMode jumpMode;
 
 
     //Activate the ball physics..
@@ -30,46 +35,42 @@ public class BallPhysics : MonoBehaviour
     //Add a force of [ForceMode] to the ball
     //To the specified direction and multiply it by the Axis-Value of the joystick
     //And Multiply it again by the speed of the object
-    public void Move(Vector3 direction, float axisValue)
+    public void AddMovementToBall() 
     {
-        rb.AddForce(direction * axisValue * moveForce * Time.fixedDeltaTime, forceMode);
-        Debug.Log("Moving Ball!");
+        rb.AddForce(ballDirection * moveForce * Time.fixedDeltaTime, forceMode);
     }
 
     //Add a force of [ForceMode] to the object
     //To the specified direction and multiply it by a force
     public void Jump()
     {
-        if(!isInAir)
+        if (!isInAir)
         {
             rb.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, jumpMode);
         }
     }
-    
+
     public void BreakMove()
     {
-        if(rb.velocity.magnitude > 1)
+        if (rb.velocity.magnitude > 1)
         {
-            rb.AddForce(-rb.velocity * moveForce/3 * Time.fixedDeltaTime , forceMode);
+            rb.AddForce(-rb.velocity * moveForce / 2 * Time.fixedDeltaTime, forceMode);
             Debug.Log("Breaking!");
         }
     }
 
-    Action OnInputTriggered;
-
     public void FixedUpdate()
     {
-        var inputFunc = FindObjectOfType<PlayerController>().OnPassingInformation;
-        if(inputFunc != null)
+        if(isInAir == false)
         {
-            inputFunc = (direction, speed) => Move(direction, speed);
+            AddMovementToBall();
         }
     }
 
     //Check if the ball is either in the air or in the ground
     public void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Ground"))
+        if (other.CompareTag("Ground"))
         {
             isInAir = false;
         }
@@ -77,7 +78,7 @@ public class BallPhysics : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("Ground"))
+        if (other.CompareTag("Ground"))
         {
             isInAir = true;
         }
