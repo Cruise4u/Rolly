@@ -3,17 +3,27 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class TimeController : MonoBehaviour
+public class TimeController : MonoBehaviour,IGameEventObserver
 {
     public int pregameCountdown;
-    public float inGameTimer;
     public GameObject preGameCounterGO;
+
+    public float inGameCounter;
     public GameObject inGameCounterGO;
-    public IEnumerator PregameCountdown(bool isLevelStarted)
+
+    //public Action StartCountdownDelegate;
+    public bool isCountingEverySecond;
+
+    public void StartCountdown()
     {
-        for(int i = 3; i > 0; i--)
+        StartCoroutine(WaitForCountdownToStart());
+    }
+
+    public IEnumerator WaitForCountdownToStart()
+    {
+        for (int i = 3; i > 0; i--)
         {
-            var iterationValue = (i==3 ? pregameCountdown : pregameCountdown -= 1);
+            var iterationValue = (i == 3 ? pregameCountdown : pregameCountdown -= 1);
             yield return new WaitForSeconds(1.0f);
             preGameCounterGO.GetComponent<TextMeshProUGUI>().text = (pregameCountdown - 1).ToString();
             var text = preGameCounterGO.GetComponent<TextMeshProUGUI>().text;
@@ -22,26 +32,44 @@ public class TimeController : MonoBehaviour
         preGameCounterGO.GetComponent<TextMeshProUGUI>().text = "Go!";
         yield return new WaitForSeconds(0.5f);
         preGameCounterGO.SetActive(false);
-        var gameManager = FindObjectOfType<GameManager>();
-        gameManager.isLevelStarted = true;
+        isCountingEverySecond = true;
     }
 
-    public void LevelTimerCountdown(float time)
+    public void CountTimeElapsed(float time)
     {
-        inGameTimer += time;
-        float mult = Mathf.Pow(10.0f, (float)2);
-        var decimalPoint = Mathf.Round(inGameTimer * mult) / mult;
-        inGameCounterGO.GetComponent<TextMeshProUGUI>().text = decimalPoint.ToString();
-        var gameManager = FindObjectOfType<GameManager>();
+        inGameCounter += time;
+        float decimalPoint = Mathf.Round(inGameCounter);
+        SetTimerAsString(decimalPoint);
     }
 
-    public IEnumerator GetTimeElapsedSinceRunStart(bool isLevelCompleted, float time)
+    public void SetTimerAsString(float timer)
     {
-        if(!isLevelCompleted)
+        inGameCounterGO.GetComponent<TextMeshProUGUI>().text = timer.ToString();
+    }
+
+    public void EndTimer()
+    {
+        isCountingEverySecond = false;
+    }
+
+    public void Notified(EventName eventName)
+    {
+        switch (eventName)
         {
-            yield return new WaitForSeconds(time);
-            inGameTimer += time;
+            case EventName.Start:
+                StartCountdown();
+                break;
+            case EventName.End:
+                EndTimer();
+                break;
         }
-        yield break;
+    }
+
+    public void Update()
+    {
+        if (isCountingEverySecond != false)
+        {
+            CountTimeElapsed(Time.deltaTime);
+        }
     }
 }

@@ -5,35 +5,23 @@ public class PlayerCamera : MonoBehaviour
     public CameraRig cameraRig;
 
     #region Camera Setup
-
     public Camera playerCamera;
     public GameObject viewTarget;
-    public Vector3 cameraOffset;
-    public float cameraPitch;
-
-    public float zoomSpeed;
-    public float currentZoom;
-    public float maxZoom;
-    public float minZoom;
+    private Vector3 cameraOffset;
+    private float cameraPitch;
+    private float zoom;
     #endregion
 
-    public void SetCameraValues()
-    {
-        cameraOffset = new Vector3(5, -6.0f, 0.0f);
-        cameraPitch = 3.0f;
-    }
-
-    public void Start()
+    public void OnEnable()
     {
         cameraRig = new CameraRig();
-        cameraRig.InitializeCameraConfiguration(playerCamera, viewTarget);
-        SetCameraValues();
+        cameraRig.Init(playerCamera, viewTarget, zoom);
+        cameraRig.SetCameraValues(new Vector3(5, -6.0f, 0.0f),4.0f,3.0f);
     }
 
     public void LateUpdate()
     {
-        cameraRig.Zoom(zoomSpeed, minZoom, maxZoom);
-        cameraRig.SmoothCameraPosition(cameraOffset,cameraPitch);
+        cameraRig.SmoothCameraPosition();
     }
 }
 
@@ -41,25 +29,29 @@ public class CameraRig
 {
     Camera selectedCamera;
     GameObject viewTarget;
-    float currentZoom;
+    float zoom;
+    Vector3 cameraOffset;
+    float cameraPitch;
 
-    public void InitializeCameraConfiguration(Camera selectedCamera,GameObject viewTarget)
+    public void Init(Camera selectedCamera,GameObject viewTarget,float zoom)
     {
         this.selectedCamera = selectedCamera;
         this.viewTarget = viewTarget;
+        this.zoom = zoom;
     }
 
-    public void Zoom(float zoomSpeed,float minZoom,float maxZoom)
+    public void SetCameraValues(Vector3 cameraOffset,float zoom,float cameraPitch)
     {
-        currentZoom = 4.5f;
+        this.cameraOffset = cameraOffset;
+        this.zoom = zoom;
+        this.cameraPitch = cameraPitch;
     }
 
-    public void SmoothCameraPosition(Vector3 cameraOffset, float cameraPitch)
+    public void SmoothCameraPosition()
     {
-        selectedCamera.transform.position = viewTarget.transform.position - (cameraOffset * currentZoom);
-        selectedCamera.transform.LookAt(viewTarget.transform.position + Vector3.up * cameraPitch);
+        selectedCamera.transform.position = viewTarget.transform.position - (this.cameraOffset * zoom);
+        selectedCamera.transform.LookAt(viewTarget.transform.position + Vector3.up * this.cameraPitch);
     }
-
 }
 
 
