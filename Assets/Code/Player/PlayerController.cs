@@ -6,14 +6,13 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour,IEventListener<WinEvent>
+public class PlayerController : MonoBehaviour
 {
-    // References to physics and joystick controller objects
-    public GameManager gameManager;
     public BallPhysics ballPhysics;
     public FixedJoystick playerJoystick;
-    public bool isInputBlocked;
 
+
+    public bool isInputBlocked;
     public Action BlockInputDelegate;
 
     public void Init()
@@ -21,23 +20,18 @@ public class PlayerController : MonoBehaviour,IEventListener<WinEvent>
         BlockInputDelegate += BlockInput;
     }
 
-    public void BlockInput()
-    {
-        isInputBlocked = true;
-    }
-
     // Set values for physics
-    public void InitializeController()
-    {
-        //ballPhysics.SetPhysicsValue();
-    }
-
     //If the value of the virtual joystick it should perform any action
     //It needs to be higher than the "Deadzone" for the virtual joystick
     //It either move or jump
     public void JoystickInput()
     {
         ballPhysics.ballDirection = new Vector3(playerJoystick.Vertical, 0.0f, -playerJoystick.Horizontal);
+    }
+
+    public void BlockInput()
+    {
+        isInputBlocked = true;
     }
 
     //Call the Jump action from the ball physics
@@ -47,20 +41,14 @@ public class PlayerController : MonoBehaviour,IEventListener<WinEvent>
         ballPhysics.Jump();
     }
 
-    //Load the scene from SceneManager in GameManager object
-    //
-    public void RestartLevelButton()
+    public void OnEnable()
     {
-        var gameManager = FindObjectOfType<GameManager>();
-        gameManager.RestartLevel();
+        BlockInputDelegate += BlockInput;
     }
 
-    public void Start()
+    public void OnDisable()
     {
-        if (gameManager.playerDeviceType == DeviceType.Handheld)
-        {
-            Screen.orientation = gameManager.playerDeviceOrientation;
-        }
+        BlockInputDelegate -= BlockInput;
     }
 
     public void Update()
@@ -84,22 +72,14 @@ public class PlayerController : MonoBehaviour,IEventListener<WinEvent>
         //    }
         //}
         #endregion
-        if(gameManager.isLevelStarted == true)
+        if (isInputBlocked == false)
         {
-            if(isInputBlocked == false)
+            JoystickInput();
+            if (ballPhysics.isBreaking == true)
             {
-                JoystickInput();
-                if (ballPhysics.isBreaking == true)
-                {
-                    ballPhysics.BreakMove();
-                }
+                ballPhysics.BreakMove();
             }
         }
-    }
-
-    public void ListenToEvent(WinEvent tEvent)
-    {
-        tEvent.winDelegateAction += BlockInputDelegate;
     }
 
 }

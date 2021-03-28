@@ -4,14 +4,6 @@ using Bolt;
 
 public class GameManager : MonoBehaviour
 {
-    public GUIController guiController;
-    public TimeController timeController;
-    public PlayerController playerControllerReference;
-
-    public bool isLevelStarted;
-    public bool isLevelFinished;
-
-
     //Reference to device type being used
     //For example, is a mobile phone or a PC?
     public DeviceType playerDeviceType;
@@ -31,44 +23,11 @@ public class GameManager : MonoBehaviour
         return currentDevice;
     }
 
-    public void InitializeObjectsConfiguration()
-    {
-        Variables.Application.Set("gameManagerObject", gameObject);
-        Variables.Application.Set("playerControllerObject", playerControllerReference);
-    }
-
-    public void StartLevel()
-    {
-
-    }
-
-    public void FinishLevel()
-    {
-        isLevelFinished = true;
-        
-    }
-
-    public void RestartLevel()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-    public void Awake()
-    {
-        InitializeObjectsConfiguration();
-    }
-
     public void Start()
     {
-        playerDeviceType = GetPlayerDeviceByType();
-        timeController.StartCoroutine(timeController.PregameCountdown(isLevelStarted));
-    }
-
-    public void Update()
-    {
-        if(isLevelStarted != false)
+        if(playerDeviceType == DeviceType.Handheld)
         {
-            timeController.LevelTimerCountdown(Time.deltaTime);
+            Screen.orientation = playerDeviceOrientation;
         }
     }
 
