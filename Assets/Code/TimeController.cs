@@ -56,10 +56,10 @@ public class TimeController : MonoBehaviour,IGameEventObserver
     {
         switch (eventName)
         {
-            case EventName.Start:
+            case EventName.StartLevel:
                 StartCountdown();
                 break;
-            case EventName.End:
+            default:
                 EndTimer();
                 break;
         }

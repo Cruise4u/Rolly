@@ -7,15 +7,18 @@ public class GUIController : MonoBehaviour,IGameEventObserver
 {
     //Array of GameObjects that have UI elements
     //
+    public GameObject parentPopup;
     public GameObject[] guiPopUps;
 
     public void DisplayWinPopup()
     {
+        parentPopup.SetActive(true);
         guiPopUps[0].SetActive(true);
     }
 
     public void DisplayLosePopup()
     {
+        parentPopup.SetActive(true);
         guiPopUps[1].SetActive(true);
     }
 

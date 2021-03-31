@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public GameEvent startGameEvent;
+    public GameEventManager gameEventManager;
     public GameObject playerGO;
 
     private Dictionary<string, LevelData> levelDataDictionary;
@@ -18,11 +18,9 @@ public class LevelManager : MonoBehaviour
     public void EnablePlayer()
     {
         playerGO.SetActive(true);
-        startGameEvent.SubscribeObserver(FindObjectOfType<TimeController>());
     }
     public void OnDisablePlayer()
     {
-        startGameEvent.UnsubscribeObserver(playerGO.GetComponent<GUIController>());
         playerGO.SetActive(false);
     }
     public void LoadLevel(LevelData levelData)
@@ -30,28 +28,19 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene(levelData.sceneName, LoadSceneMode.Single);
         currentLevelData = levelData;
     }
-    public void RestartLevel()
+    public void RestartLevel(LevelData levelData)
     {
-        LoadLevel(currentLevelData);
-    }
-    public IEnumerator StartLevelAfterSeconds(float seconds)
-    {
-        yield return new WaitForSeconds(1.0f);
+        LoadLevel(levelData);
     }
 
     public void OnEnable()
     {
         EnablePlayer();
-        startGameEvent.NotifyObservers();
-    }
-
-    public void OnDisable()
-    {
-
     }
 
     public void Start()
     {
-        StartCoroutine(StartLevelAfterSeconds(1.0f));
+        gameEventManager.NotifyObserversToEvent(EventName.StartLevel);
     }
+
 }

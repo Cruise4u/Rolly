@@ -1,23 +1,16 @@
-﻿using Michsky.UI.ModernUIPack;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour,IGameEventObserver
 {
-    public BallPhysics ballPhysics;
+    public PlayerPhysics ballPhysics;
     public FixedJoystick playerJoystick;
-
-
+    public BreakButton breakButton;
     public bool isInputBlocked;
-    public Action BlockInputDelegate;
-
     public void Init()
     {
-        BlockInputDelegate += BlockInput;
+
     }
 
     // Set values for physics
@@ -38,17 +31,54 @@ public class PlayerController : MonoBehaviour
     //
     public void JumpButton()
     {
-        ballPhysics.Jump();
+        if (isInputBlocked != true)
+        {
+            ballPhysics.Jump();
+        }
     }
 
-    public void OnEnable()
+    public void UnblockInput()
     {
-        BlockInputDelegate += BlockInput;
+        StartCoroutine(WaitForGameToStartToUnblockInput(3.15f));
     }
 
-    public void OnDisable()
+    public IEnumerator WaitForGameToStartToUnblockInput(float seconds)
     {
-        BlockInputDelegate -= BlockInput;
+        Debug.Log(isInputBlocked);
+        yield return new WaitForSeconds(seconds);
+        isInputBlocked = false;
+        Debug.Log(isInputBlocked);
+    }
+
+    public void Notified(EventName eventName)
+    {
+        switch (eventName)
+        {
+            case EventName.StartLevel:
+                UnblockInput();
+                break;
+            case EventName.Win:
+
+                break;
+
+            case EventName.Lose:
+
+                break;
+
+            case EventName.EndLevel:
+
+                break;
+        }
+    }
+
+    //public void Awake()
+    //{
+    //    DontDestroyOnLoad(gameObject);
+    //}
+
+    public void Start()
+    {
+        isInputBlocked = true;
     }
 
     public void Update()
@@ -72,14 +102,9 @@ public class PlayerController : MonoBehaviour
         //    }
         //}
         #endregion
-        if (isInputBlocked == false)
+        if (isInputBlocked != true)
         {
             JoystickInput();
-            if (ballPhysics.isBreaking == true)
-            {
-                ballPhysics.BreakMove();
-            }
         }
     }
-
 }

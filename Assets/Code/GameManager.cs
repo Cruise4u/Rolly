@@ -23,6 +23,11 @@ public class GameManager : MonoBehaviour
         return currentDevice;
     }
 
+    public void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void Start()
     {
         if(playerDeviceType == DeviceType.Handheld)
