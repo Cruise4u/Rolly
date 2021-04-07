@@ -5,15 +5,23 @@ using UnityEngine.EventSystems;
 
 public class BreakButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    public PlayerController playerController;
+    public GameEventManager gameEventManager;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        playerController.ballPhysics.isBreaking = true;
+        GameEvent randomEvent = null;
+        if (gameEventManager.gameEventDictionary.TryGetValue(EventName.StartBreaking, out randomEvent))
+        {
+            gameEventManager.NotifyObserversToEvent(EventName.StartBreaking);
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        playerController.ballPhysics.isBreaking = false;
+        GameEvent randomEvent = null;
+        if(gameEventManager.gameEventDictionary.TryGetValue(EventName.EndBreaking,out randomEvent))
+        {
+            gameEventManager.NotifyObserversToEvent(EventName.EndBreaking);
+        }
     }
 }

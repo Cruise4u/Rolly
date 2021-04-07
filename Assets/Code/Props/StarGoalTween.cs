@@ -31,4 +31,11 @@ public class StarGoalTween : MonoBehaviour
         PlayStarAnimationSequence();
     }
 
+    public void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        CreateStarAnimationSequence();
+    }
+
+
 }

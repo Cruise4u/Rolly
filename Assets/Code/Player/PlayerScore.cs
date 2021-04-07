@@ -7,8 +7,6 @@ public class PlayerScore : MonoBehaviour
     public bool isLevelFinished;
     public Action ScoreDelegate;
 
-   
-
     public void AddScore()
     {
 
@@ -18,5 +16,4 @@ public class PlayerScore : MonoBehaviour
     {
 
     }
-
 }
