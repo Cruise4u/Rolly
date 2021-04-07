@@ -4,7 +4,6 @@ using UnityEngine;
 public class PlayerTriggers : MonoBehaviour,IGameEventObserver
 {
     public GameEventManager gameEventManager;
-
     public bool isPlayerDefeated;
 
     public void Notified(EventName eventName)

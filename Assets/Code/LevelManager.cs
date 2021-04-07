@@ -10,6 +10,8 @@ public class LevelManager : MonoBehaviour
     public GameObject playerGO;
 
     private Dictionary<string, LevelData> levelDataDictionary;
+
+    public LevelData levelSelectMenuData;
     private LevelData currentLevelData;
 
     private bool isLevelStarted;
@@ -31,6 +33,26 @@ public class LevelManager : MonoBehaviour
     public void RestartLevel(LevelData levelData)
     {
         LoadLevel(levelData);
+    }
+
+    public void LoadLevelSelectMenu()
+    {
+        LoadLevel(levelSelectMenuData);
+    }
+
+    public bool CheckIfIsLastLevel()
+    {
+        bool condition = false;
+        int numOfLevels = levelDataDictionary.Count;
+        if(levelDataDictionary[currentLevelData.sceneName].levelName == LevelName.SceneLevel005)
+        {
+            condition = true;
+        }
+        else
+        {
+            condition = false;
+        }
+        return condition;
     }
 
     public void OnEnable()

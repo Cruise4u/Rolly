@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class TimeController : MonoBehaviour,IGameEventObserver
 {
-    public int pregameCountdown;
-    public GameObject preGameCounterGO;
+    public static TimeController instance = null;
+    public GUIController guiController;
 
+    public int pregameCountdown;
     public float inGameCounter;
-    public GameObject inGameCounterGO;
 
     //public Action StartCountdownDelegate;
     public bool isCountingEverySecond;
@@ -21,30 +20,26 @@ public class TimeController : MonoBehaviour,IGameEventObserver
 
     public IEnumerator WaitForCountdownToStart()
     {
-        for (int i = 3; i > 0; i--)
+        var pregameTimerGO = guiController.pregameCounterGO;
+        guiController.WriteTextDescription(pregameTimerGO, "3");
+        for (int i = 3; i >= 0; i--)
         {
-            var iterationValue = (i == 3 ? pregameCountdown : pregameCountdown -= 1);
+            pregameCountdown -= 1;
             yield return new WaitForSeconds(1.0f);
-            preGameCounterGO.GetComponent<TextMeshProUGUI>().text = (pregameCountdown - 1).ToString();
-            var text = preGameCounterGO.GetComponent<TextMeshProUGUI>().text;
-            Debug.Log("Text is " + text);
+            guiController.ConvertTimeToString(pregameTimerGO, (pregameCountdown));
         }
-        preGameCounterGO.GetComponent<TextMeshProUGUI>().text = "Go!";
+        guiController.WriteTextDescription(pregameTimerGO, "Go!");
         yield return new WaitForSeconds(0.5f);
-        preGameCounterGO.SetActive(false);
+        pregameTimerGO.SetActive(false);
         isCountingEverySecond = true;
     }
 
     public void CountTimeElapsed(float time)
     {
+        var ingameTimerGO = guiController.inGameCounterGO;
         inGameCounter += time;
         float decimalPoint = Mathf.Round(inGameCounter);
-        SetTimerAsString(decimalPoint);
-    }
-
-    public void SetTimerAsString(float timer)
-    {
-        inGameCounterGO.GetComponent<TextMeshProUGUI>().text = timer.ToString();
+        guiController.ConvertTimeToString(ingameTimerGO,decimalPoint);
     }
 
     public void EndTimer()
@@ -65,7 +60,20 @@ public class TimeController : MonoBehaviour,IGameEventObserver
         }
     }
 
-    public void Update()
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void Update()
     {
         if (isCountingEverySecond != false)
         {

@@ -14,7 +14,7 @@ public class GameEventManager : MonoBehaviour
     public void Init()
     {
         gameEventDictionary = new Dictionary<EventName, GameEvent>();
-        GameEvent[] gameEvents = Resources.LoadAll<GameEvent>("Events");
+        GameEvent[] gameEvents = Resources.LoadAll<GameEvent>("Prefabs/Events");
         foreach (GameEvent gameEvent in gameEvents)
         {
             if (!gameEventDictionary.ContainsKey(gameEvent.eventName))
@@ -47,13 +47,16 @@ public class GameEventManager : MonoBehaviour
                         //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.EndLevel:
-
+                        gameEvent.SubscribeObserver(FindObjectOfType<TimeController>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                         break;
                     case EventName.Win:
                         gameEvent.SubscribeObserver(FindObjectOfType<TimeController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerTriggers>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
 
@@ -62,6 +65,7 @@ public class GameEventManager : MonoBehaviour
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerTriggers>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.StartBreaking:
@@ -91,12 +95,13 @@ public class GameEventManager : MonoBehaviour
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<TimeController>());
-                    gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
                     break;
                 case EventName.Win:
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
                     break;
 
                 case EventName.Lose:
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
                     break;
                 case EventName.StartBreaking:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
