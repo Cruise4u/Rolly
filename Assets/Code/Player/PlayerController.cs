@@ -57,16 +57,14 @@ public class PlayerController : MonoBehaviour,IGameEventObserver
             case EventName.StartLevel:
                 UnblockInput();
                 break;
-            case EventName.Win:
-
-                break;
-
-            case EventName.Lose:
-
-                break;
-
             case EventName.EndLevel:
-
+                BlockInput();
+                break;
+            case EventName.Win:
+                BlockInput();
+                break;
+            case EventName.Lose:
+                BlockInput();
                 break;
         }
     }
