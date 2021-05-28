@@ -16,6 +16,7 @@ public class LevelData : ScriptableObject
 {
     public LevelName levelName;
     public string sceneName;
+    public GameObject sceneBase;
 
     public void OnValidate()
     {

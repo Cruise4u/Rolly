@@ -4,42 +4,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>,IGameEventObserver
 {
-    public GameEventManager gameEventManager;
-    public GameObject playerGO;
-
+    #region LevelManager field members
     private Dictionary<string, LevelData> levelDataDictionary;
-
     public LevelData levelSelectMenuData;
-    private LevelData currentLevelData;
-
+    public LevelData currentLevelData;
+    public GameObject playerGO;
+    public TimeController timeController;
     private bool isLevelStarted;
     private bool isLevelFinished;
 
-    public void EnablePlayer()
-    {
-        playerGO.SetActive(true);
-    }
-    public void OnDisablePlayer()
-    {
-        playerGO.SetActive(false);
-    }
+    #endregion
+
     public void LoadLevel(LevelData levelData)
     {
         SceneManager.LoadScene(levelData.sceneName, LoadSceneMode.Single);
-        currentLevelData = levelData;
     }
     public void RestartLevel(LevelData levelData)
     {
         LoadLevel(levelData);
     }
-
     public void LoadLevelSelectMenu()
     {
         LoadLevel(levelSelectMenuData);
     }
-
     public bool CheckIfIsLastLevel()
     {
         bool condition = false;
@@ -54,15 +43,35 @@ public class LevelManager : MonoBehaviour
         }
         return condition;
     }
-
-    public void OnEnable()
+    public void SpawnPlayerOnBase(LevelData levelData)
     {
-        EnablePlayer();
+        playerGO.transform.position = levelData.sceneBase.transform.position;
+    }
+    public void Notified(EventName eventName)
+    {
+        switch (eventName)
+        {
+            case EventName.EnterLevel:
+                timeController.ResetTimer();
+                SpawnPlayerOnBase(currentLevelData);
+                StartCoroutine(timeController.WaitForCountdownToStart());
+                break;
+            case EventName.Lose:
+                timeController.StopTimer();
+                break;
+        }
     }
 
     public void Start()
     {
-        gameEventManager.NotifyObserversToEvent(EventName.StartLevel);
+        timeController = new TimeController();
     }
 
+    void Update()
+    {
+        if(timeController.isCountingEverySecond != false)
+        {
+            timeController.CountdownElapsedTime(GUIController.Instance.inGameCounterGO, Time.deltaTime);
+        }
+    }
 }

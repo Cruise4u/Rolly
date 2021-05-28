@@ -4,36 +4,28 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GUIController : MonoBehaviour,IGameEventObserver
+public class GUIController : Singleton<GUIController>, IGameEventObserver
 {
-    //Array of GameObjects that have UI elements
-    //
-    public PrefabSO counterPrefab;
-    public GameObject parentPopup;
-    public GameObject[] guiPopUps;
-
     public GameObject pregameCounterGO;
     public GameObject inGameCounterGO;
-
-    string pregameCounterPath = "Prefabs/Canvases/PreGameCountdown";
-    string ingameCounterPath = "Prefabs/Canvases/IngameCountdown";
-
-    public void Awake()
-    {
-        counterPrefab.LoadObject(pregameCounterGO,pregameCounterPath);
-        counterPrefab.LoadObject(inGameCounterGO,ingameCounterPath);
-    }
+    public GameObject winPopupGO;
+    public GameObject losePopupGO;
+    public GameObject InputGUIGO;
 
     public void DisplayWinPopup()
     {
-        parentPopup.SetActive(true);
-        guiPopUps[0].SetActive(true);
+        winPopupGO.SetActive(true);
     }
 
     public void DisplayLosePopup()
     {
-        parentPopup.SetActive(true);
-        guiPopUps[1].SetActive(true);
+        losePopupGO.SetActive(true);
+    }
+
+    public void ResetPopups()
+    {
+        winPopupGO.SetActive(false);
+        losePopupGO.SetActive(false);
     }
 
     public void ConvertTimeToString(GameObject gui,float timer)
@@ -50,6 +42,9 @@ public class GUIController : MonoBehaviour,IGameEventObserver
     {
         switch (eventName)
         {
+            case EventName.StartLevel:
+                pregameCounterGO.SetActive(true);
+                break;
             case EventName.Win:
                 DisplayWinPopup();
                 break;
@@ -58,4 +53,6 @@ public class GUIController : MonoBehaviour,IGameEventObserver
                 break;
         }
     }
+
 }
+

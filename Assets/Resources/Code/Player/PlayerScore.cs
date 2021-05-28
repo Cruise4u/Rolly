@@ -1,11 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayerScore : MonoBehaviour
+public class PlayerScore : MonoBehaviour,IGameEventObserver
 {
-    public bool isLevelStarted;
-    public bool isLevelFinished;
-    public Action ScoreDelegate;
+    public void Defeat()
+    {
+        Destroy(gameObject);
+    }
 
     public void AddScore()
     {
@@ -15,5 +16,15 @@ public class PlayerScore : MonoBehaviour
     public void SetScoreToZero()
     {
 
+    }
+
+    public void Notified(EventName eventName)
+    {
+        switch (eventName)
+        {
+            case EventName.Lose:
+                Defeat();
+                break;
+        }
     }
 }

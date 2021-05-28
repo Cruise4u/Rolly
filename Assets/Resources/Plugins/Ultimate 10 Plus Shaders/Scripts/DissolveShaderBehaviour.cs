@@ -3,29 +3,62 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class DissolveShaderBehaviour : MonoBehaviour
+public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>
 {
-    public float speed = 0.5f;
-
-    private float t = 0.0f;
+    public bool isEffectActive;
+    public float dissolveSpeed;
+    public float dissolveTime;
     private MeshRenderer meshRenderer;
     private Material[] mats;
 
-
-    private void Start(){
-        meshRenderer = GetComponent<MeshRenderer>();
-        mats = meshRenderer.materials;
+    public IEnumerator WaitForSecondsToStopEffect(float time)
+    {
+        StartEffect();
+        yield return new WaitForSeconds(time);
+        StopEffect();
     }
 
-    private void DissolveEffect()
+    public void DissolveMaterialEverySecond(float time)
     {
-        mats[0].SetFloat("_Cutoff", Mathf.Sin(t * speed));
-        t += Time.deltaTime;
+        dissolveTime += time;
+        mats[0].SetFloat("_Cutoff", Mathf.Sin(dissolveTime * dissolveSpeed));
         meshRenderer.materials = mats;
     }
-
-    private void Update()
+    
+    public void StartEffect()
     {
-        DissolveEffect();
+        isEffectActive = true;
     }
+
+    public void StopEffect()
+    {
+        isEffectActive = false;
+    }
+
+    public void TriggerDissolveEffect(float time)
+    {
+        StartCoroutine(WaitForSecondsToStopEffect(time));
+    }
+
+    public void ResetDissolveEffect()
+    {
+        dissolveTime = 0.0f;
+        StopEffect();
+    }
+
+    private void Awake()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
+        mats = meshRenderer.materials;
+        dissolveTime = Mathf.Clamp(dissolveTime, 0.0f, 1.0f);
+    }
+
+    public void Update()
+    {
+        if(isEffectActive == true)
+        {
+            DissolveMaterialEverySecond(Time.deltaTime);
+        }
+    }
+
 }

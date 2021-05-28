@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class PlayerVisualEffects : MonoBehaviour,IGameEventObserver
+public class PlayerVisualEffects : Singleton<PlayerVisualEffects>, IGameEventObserver
 {
     public DissolveShaderBehaviour dissolveShaderBehaviour;
 
@@ -11,11 +12,12 @@ public class PlayerVisualEffects : MonoBehaviour,IGameEventObserver
         {
             case EventName.Lose:
                 dissolveShaderBehaviour.enabled = true;
+                dissolveShaderBehaviour.TriggerDissolveEffect(2.0f);
                 break;
             case EventName.StartLevel:
+                dissolveShaderBehaviour.ResetDissolveEffect();
                 dissolveShaderBehaviour.enabled = false;
                 break;
         }
     }
-
 }

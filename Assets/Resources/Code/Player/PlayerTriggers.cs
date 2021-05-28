@@ -1,35 +1,20 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayerTriggers : MonoBehaviour,IGameEventObserver
+public class PlayerTriggers : Singleton<PlayerTriggers>
 {
-    public GameEventManager gameEventManager;
-    public bool isPlayerDefeated;
-
-    public void Notified(EventName eventName)
-    {
-        switch (eventName)
-        {
-            case EventName.Win:
-                break;
-            case EventName.Lose:
-                break;
-        }
-    }
-
     public void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(TagEnum.Win.ToString()))
         {
-            gameEventManager.NotifyObserversToEvent(EventName.Win);
+            EventManager.Instance.NotifyObserversToEvent(EventName.Win);
         }
         if (other.CompareTag(TagEnum.Defeat.ToString()))
         {
-            gameEventManager.NotifyObserversToEvent(EventName.Lose);
+            EventManager.Instance.NotifyObserversToEvent(EventName.Lose);
+            Destroy(gameObject, 1.0f);
         }
     }
-
-
 }
 
 public enum TagEnum
