@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IGameEventObserver
+public interface IEventObserver
 {
     void Notified(EventName eventName);
 }
 
-public class GameEventManager : MonoBehaviour
+public class GameEventManager : Singleton<GameEventManager>
 {
     public Dictionary<EventName, GameEvent> gameEventDictionary;
-
     public void Init()
     {
         gameEventDictionary = new Dictionary<EventName, GameEvent>();
@@ -23,7 +22,6 @@ public class GameEventManager : MonoBehaviour
             }
         }
     }
-
     public void NotifyObserversToEvent(EventName eventName)
     {
         GameEvent randomEvent = null;
@@ -40,31 +38,36 @@ public class GameEventManager : MonoBehaviour
             {
                 switch (gameEvent.eventName)
                 {
+                    case EventName.EnterLevel:
+                        gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
+                        //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
+                        break;
+                    case EventName.ExitLevel:
+                        gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
+                        //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
+                        break;
                     case EventName.StartLevel:
-                        gameEvent.SubscribeObserver(FindObjectOfType<TimeController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                         //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.EndLevel:
-                        gameEvent.SubscribeObserver(FindObjectOfType<TimeController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                         break;
                     case EventName.Win:
-                        gameEvent.SubscribeObserver(FindObjectOfType<TimeController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
-                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerTriggers>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
-
                     case EventName.Lose:
-                        gameEvent.SubscribeObserver(FindObjectOfType<TimeController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
-                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerTriggers>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
@@ -84,8 +87,13 @@ public class GameEventManager : MonoBehaviour
         {
             switch (gameEvent.eventName)
             {
+                case EventName.EnterLevel:
+                    gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
+                    break;
+                case EventName.ExitLevel:
+                    gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
+                    break;
                 case EventName.StartLevel:
-                    gameEvent.UnsubscribeObserver(FindObjectOfType<TimeController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerSounds>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
@@ -94,7 +102,6 @@ public class GameEventManager : MonoBehaviour
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerSounds>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
-                    gameEvent.UnsubscribeObserver(FindObjectOfType<TimeController>());
                     break;
                 case EventName.Win:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
@@ -112,7 +119,6 @@ public class GameEventManager : MonoBehaviour
             }
         }
     }
-
     public void Awake()
     {
         Init();

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GUIController : MonoBehaviour,IGameEventObserver
+public class GUIController : Singleton<GUIController>,IEventObserver
 {
     //Array of GameObjects that have UI elements
     //

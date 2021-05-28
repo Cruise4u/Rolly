@@ -23,11 +23,6 @@ public class GameManager : MonoBehaviour
         return currentDevice;
     }
 
-    public void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
     public void Start()
     {
         if(playerDeviceType == DeviceType.Handheld)
@@ -35,6 +30,5 @@ public class GameManager : MonoBehaviour
             Screen.orientation = playerDeviceOrientation;
         }
     }
-
 }
 

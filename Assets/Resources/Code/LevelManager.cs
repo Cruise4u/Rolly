@@ -4,27 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>,IEventObserver
 {
-    public GameEventManager gameEventManager;
+    #region Class Field Members
     public GameObject playerGO;
-
-    private Dictionary<string, LevelData> levelDataDictionary;
-
+    public TimeController timeController;
     public LevelData levelSelectMenuData;
     private LevelData currentLevelData;
-
+    private Dictionary<string, LevelData> levelDataDictionary;
     private bool isLevelStarted;
     private bool isLevelFinished;
+    #endregion
 
-    public void EnablePlayer()
-    {
-        playerGO.SetActive(true);
-    }
-    public void OnDisablePlayer()
-    {
-        playerGO.SetActive(false);
-    }
     public void LoadLevel(LevelData levelData)
     {
         SceneManager.LoadScene(levelData.sceneName, LoadSceneMode.Single);
@@ -34,12 +25,10 @@ public class LevelManager : MonoBehaviour
     {
         LoadLevel(levelData);
     }
-
     public void LoadLevelSelectMenu()
     {
         LoadLevel(levelSelectMenuData);
     }
-
     public bool CheckIfIsLastLevel()
     {
         bool condition = false;
@@ -54,15 +43,35 @@ public class LevelManager : MonoBehaviour
         }
         return condition;
     }
-
-    public void OnEnable()
+    public void EnablePlayer()
     {
-        EnablePlayer();
+        playerGO.SetActive(true);
+    }
+    public void DisablePlayer()
+    {
+        playerGO.SetActive(false);
+    }
+    public void SpawnPlayer(LevelData levelData)
+    {
+        playerGO.transform.position = levelData.sceneBaseGO.transform.position;
     }
 
     public void Start()
     {
-        gameEventManager.NotifyObserversToEvent(EventName.StartLevel);
+        SpawnPlayer(currentLevelData);
+        GameEventManager.Instance.NotifyObserversToEvent(EventName.EnterLevel);
     }
 
+    public void Update()
+    {
+        if(timeController.isCountingEverySecond != false)
+        {
+            timeController.CountTimeElapsed(Time.deltaTime);
+        }
+    }
+
+    public void Notified(EventName eventName)
+    {
+        throw new NotImplementedException();
+    }
 }

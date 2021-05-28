@@ -15,6 +15,7 @@ public enum LevelName
 public class LevelData : ScriptableObject
 {
     public LevelName levelName;
+    public GameObject sceneBaseGO;
     public string sceneName;
 
     public void OnValidate()

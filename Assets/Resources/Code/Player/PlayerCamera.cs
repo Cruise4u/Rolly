@@ -1,27 +1,36 @@
 ﻿using UnityEngine;
 
-public class PlayerCamera : MonoBehaviour
+public class PlayerCamera : Singleton<PlayerCamera>,IEventObserver
 {
+    #region Class Field Members
     public CameraRig cameraRig;
-
-    #region Camera Setup
     public Camera playerCamera;
     public GameObject viewTarget;
     private Vector3 cameraOffset;
     private float cameraPitch;
     private float zoom;
     #endregion
-
-    public void OnEnable()
+    public void Init()
     {
         cameraRig = new CameraRig();
         cameraRig.Init(playerCamera, viewTarget, zoom);
-        cameraRig.SetCameraValues(new Vector3(5, -6.0f, 0.0f),4.0f,3.0f);
+        cameraRig.SetCameraValues(new Vector3(5, -6.0f, 0.0f), 4.0f, 3.0f);
     }
-
+    public void Notified(EventName eventName)
+    {
+        switch (eventName)
+        {
+            case EventName.EnterLevel:
+                Init();
+                break;
+        }
+    }
     public void LateUpdate()
     {
-        cameraRig.SmoothCameraPosition();
+        if(cameraRig != null)
+        {
+            cameraRig.SmoothCameraPosition();
+        }
     }
 }
 

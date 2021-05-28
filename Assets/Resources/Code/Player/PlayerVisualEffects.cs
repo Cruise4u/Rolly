@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayerVisualEffects : MonoBehaviour,IGameEventObserver
+public class PlayerVisualEffects : MonoBehaviour,IEventObserver
 {
     public DissolveShaderBehaviour dissolveShaderBehaviour;
 
