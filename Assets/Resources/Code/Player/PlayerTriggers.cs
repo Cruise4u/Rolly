@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class PlayerTriggers : MonoBehaviour
 {
-
-
-    public void OnTriggerEnter(Collider other)
+   public void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(TagEnum.Win.ToString()))
         {

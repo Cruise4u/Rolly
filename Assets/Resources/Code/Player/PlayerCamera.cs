@@ -10,11 +10,19 @@ public class PlayerCamera : Singleton<PlayerCamera>,IEventObserver
     private float cameraPitch;
     private float zoom;
     #endregion
+
+    public void GetGlobalPlayerVariables()
+    {
+        playerCamera = FindObjectOfType<Camera>();
+        viewTarget = FindObjectOfType<PlayerController>().gameObject;
+    }
+
     public void Init()
     {
+        GetGlobalPlayerVariables();
         cameraRig = new CameraRig();
         cameraRig.Init(playerCamera, viewTarget, zoom);
-        cameraRig.SetCameraValues(new Vector3(5, -6.0f, 0.0f), 4.0f, 3.0f);
+        cameraRig.SetCameraValues(new Vector3(5, -5.0f, 0.0f), 4.0f, 3.0f);
     }
     public void Notified(EventName eventName)
     {

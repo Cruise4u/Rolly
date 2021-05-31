@@ -30,13 +30,13 @@ public class GameEvent : ScriptableObject
 
 public enum EventName
 {
+    EndBreaking,
+    EndLevel,
     EnterLevel,
     ExitLevel,
-    StartLevel,
-    PauseLevel,
-    EndLevel,
-    StartBreaking,
-    EndBreaking,
-    Win,
     Lose,
+    PauseLevel,
+    StartBreaking,
+    StartLevel,
+    Win,
 }

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class DissolveShaderBehaviour : MonoBehaviour
+public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>,IEventObserver
 {
     public float speed = 0.5f;
-
     private float t = 0.0f;
     private MeshRenderer meshRenderer;
     private Material[] mats;
 
+    public bool isShaderActive;
 
     private void Start(){
         meshRenderer = GetComponent<MeshRenderer>();
@@ -26,6 +26,22 @@ public class DissolveShaderBehaviour : MonoBehaviour
 
     private void Update()
     {
-        DissolveEffect();
+        if (isShaderActive != false)
+        {
+            DissolveEffect();
+        }
+    }
+
+    public void Notified(EventName eventName)
+    {
+        switch (eventName)
+        {
+            case EventName.Lose:
+                isShaderActive = true;
+                break;
+            default:
+                isShaderActive = false;
+                break;
+        }
     }
 }

@@ -8,10 +8,7 @@ public class PlayerController : MonoBehaviour,IEventObserver
     public FixedJoystick playerJoystick;
     public BreakButton breakButton;
     public bool isInputBlocked;
-    public void Init()
-    {
 
-    }
     //Set values for physics
     //If the value of the virtual joystick it should perform any action
     //It needs to be higher than the "Deadzone" for the virtual joystick
@@ -46,6 +43,7 @@ public class PlayerController : MonoBehaviour,IEventObserver
                 BlockInput();
                 break;
             case EventName.StartLevel:
+                Debug.Log("Unblocking Input!");
                 UnblockInput();
                 break;
             case EventName.EndLevel:
@@ -62,7 +60,7 @@ public class PlayerController : MonoBehaviour,IEventObserver
 
     public void Update()
     {
-        if (isInputBlocked == false)
+        if(isInputBlocked != true)
         {
             JoystickAction();
         }
