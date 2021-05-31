@@ -2,59 +2,48 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour,IGameEventObserver
+public class PlayerController : MonoBehaviour,IEventObserver
 {
     public PlayerPhysics ballPhysics;
     public FixedJoystick playerJoystick;
     public BreakButton breakButton;
     public bool isInputBlocked;
-    public void Init()
-    {
 
-    }
-
-    // Set values for physics
+    //Set values for physics
     //If the value of the virtual joystick it should perform any action
     //It needs to be higher than the "Deadzone" for the virtual joystick
     //It either move or jump
-    public void JoystickInput()
+    //
+    public void JoystickAction()
     {
         ballPhysics.ballDirection = new Vector3(playerJoystick.Vertical, 0.0f, -playerJoystick.Horizontal);
     }
-
-    public void BlockInput()
-    {
-        isInputBlocked = true;
-    }
-
     //Call the Jump action from the ball physics
     //
-    public void JumpButton()
+    public void JumpAction()
     {
         if (isInputBlocked != true)
         {
             ballPhysics.Jump();
         }
     }
-
+    public void BlockInput()
+    {
+        isInputBlocked = true;
+    }
     public void UnblockInput()
     {
-        StartCoroutine(WaitForGameToStartToUnblockInput(3.15f));
-    }
-
-    public IEnumerator WaitForGameToStartToUnblockInput(float seconds)
-    {
-        Debug.Log(isInputBlocked);
-        yield return new WaitForSeconds(seconds);
         isInputBlocked = false;
-        Debug.Log(isInputBlocked);
     }
-
     public void Notified(EventName eventName)
     {
         switch (eventName)
         {
+            case EventName.EnterLevel:
+                BlockInput();
+                break;
             case EventName.StartLevel:
+                Debug.Log("Unblocking Input!");
                 UnblockInput();
                 break;
             case EventName.EndLevel:
@@ -69,40 +58,11 @@ public class PlayerController : MonoBehaviour,IGameEventObserver
         }
     }
 
-    //public void Awake()
-    //{
-    //    DontDestroyOnLoad(gameObject);
-    //}
-
-    public void Start()
-    {
-        isInputBlocked = true;
-    }
-
     public void Update()
     {
-        #region Input By Device
-        //if (gameManager.playerDeviceType == DeviceType.Desktop)
-        //{
-        //    JoystickInput();
-        //    //KeyboardInput();
-        //    if (ballPhysics.isBreaking == true)
-        //    {
-        //        ballPhysics.BreakMove();
-        //    }
-        //}
-        //else if (gameManager.playerDeviceType == DeviceType.Handheld)
-        //{
-        //    JoystickInput();
-        //    if (ballPhysics.isBreaking == true)
-        //    {
-        //        ballPhysics.BreakMove();
-        //    }
-        //}
-        #endregion
-        if (isInputBlocked != true)
+        if(isInputBlocked != true)
         {
-            JoystickInput();
+            JoystickAction();
         }
     }
 }

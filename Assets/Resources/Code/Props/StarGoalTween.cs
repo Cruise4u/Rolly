@@ -33,7 +33,6 @@ public class StarGoalTween : MonoBehaviour
 
     public void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         CreateStarAnimationSequence();
     }
 

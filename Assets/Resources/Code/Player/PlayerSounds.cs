@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayerSounds : MonoBehaviour, IGameEventObserver
+public class PlayerSounds : MonoBehaviour, IEventObserver
 {
     public void Notified(EventName eventName)
     {

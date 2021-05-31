@@ -7,21 +7,21 @@ public class GameEvent : ScriptableObject
 {
     public EventName eventName;
 
-    private List<IGameEventObserver> observersList = new List<IGameEventObserver>();
+    private List<IEventObserver> observersList = new List<IEventObserver>();
 
-    public void SubscribeObserver(IGameEventObserver observer)
+    public void SubscribeObserver(IEventObserver observer)
     {
         observersList.Add(observer);
     }
 
-    public void UnsubscribeObserver(IGameEventObserver observer)
+    public void UnsubscribeObserver(IEventObserver observer)
     {
         observersList.Remove(observer);
     }
 
     public void NotifyObservers()
     {
-        foreach(IGameEventObserver observer in observersList)
+        foreach(IEventObserver observer in observersList)
         {
             observer.Notified(eventName);
         }
@@ -30,10 +30,13 @@ public class GameEvent : ScriptableObject
 
 public enum EventName
 {
-    StartLevel,
-    EndLevel,
-    StartBreaking,
     EndBreaking,
-    Win,
+    EndLevel,
+    EnterLevel,
+    ExitLevel,
     Lose,
+    PauseLevel,
+    StartBreaking,
+    StartLevel,
+    Win,
 }
