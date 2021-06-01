@@ -1,20 +1,21 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayerPhysics : MonoBehaviour,IEventObserver
+public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
 {
     #region Class Field Members
     public Rigidbody rb;
     public bool isInAir;
     public bool isBreaking;
+    public bool isJumping;
     public bool isPhysicsBodyActive;
+
 
     public Vector3 ballDirection;
     private float inputAxisValue;
     public float moveForce;
     public float jumpForce;
     #endregion
-
     public void AddMovementToBall() 
     {
         rb.AddForce(ballDirection * moveForce * Time.fixedDeltaTime, ForceMode.Force);
@@ -24,7 +25,7 @@ public class PlayerPhysics : MonoBehaviour,IEventObserver
         var horizontalVeocity = new Vector3(rb.velocity.x, -Physics.gravity.y, rb.velocity.z);
         if (horizontalVeocity.magnitude >= 1)
         {
-            rb.AddForce(-horizontalVeocity * moveForce / 2.5f * Time.fixedDeltaTime, ForceMode.Force);
+            rb.AddForce(-horizontalVeocity * (moveForce / 2.5f) * Time.fixedDeltaTime, ForceMode.Force);
         }
     }   
     public void Jump()
@@ -61,6 +62,9 @@ public class PlayerPhysics : MonoBehaviour,IEventObserver
             case EventName.EndBreaking:
                 isBreaking = false;
                 break;
+            case EventName.Win:
+                DisablePhysics();
+                break;
         }
     }
     public void FixedUpdate()
@@ -70,13 +74,6 @@ public class PlayerPhysics : MonoBehaviour,IEventObserver
             if (isInAir == false)
             {
                 AddMovementToBall();
-            }
-            if (isInAir == true)
-            {
-                if (isBreaking == true)
-                {
-                    BreakMove();
-                }
             }
             if (isBreaking == true)
             {

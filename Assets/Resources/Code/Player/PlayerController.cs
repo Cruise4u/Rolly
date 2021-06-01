@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour,IEventObserver
 {
-    public PlayerPhysics ballPhysics;
     public FixedJoystick playerJoystick;
     public BreakButton breakButton;
     public bool isInputBlocked;
+    RaycastHit hit;
 
     //Set values for physics
     //If the value of the virtual joystick it should perform any action
@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour,IEventObserver
     //
     public void JoystickAction()
     {
-        ballPhysics.ballDirection = new Vector3(playerJoystick.Vertical, 0.0f, -playerJoystick.Horizontal);
+        PlayerPhysics.Instance.ballDirection = new Vector3(playerJoystick.Vertical, 0.0f, -playerJoystick.Horizontal);
     }
     //Call the Jump action from the ball physics
     //
@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour,IEventObserver
     {
         if (isInputBlocked != true)
         {
-            ballPhysics.Jump();
+            PlayerPhysics.Instance.Jump();
         }
     }
     public void BlockInput()
@@ -34,6 +34,17 @@ public class PlayerController : MonoBehaviour,IEventObserver
     public void UnblockInput()
     {
         isInputBlocked = false;
+    }
+    public void CheckIfIsAboveGround()
+    {
+        var bottomPosition = Vector3.down * 3.0f;
+        if (Physics.Raycast(gameObject.transform.position, bottomPosition, out hit, 1.0f))
+        {
+            if (hit.collider.gameObject.CompareTag("Jump"))
+            {
+                PlayerPhysics.Instance.isInAir = false;
+            }
+        }
     }
     public void Notified(EventName eventName)
     {

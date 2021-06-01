@@ -1,13 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class MenuController : MonoBehaviour
+public class MenuController : Singleton<MenuController>
 {
+    public Dictionary<int,LevelData> levelDictionary;
+    public LevelData[] levelDataArray;
 
-    public void LoadMenuScene(string levelSelectionMenuName)
+    public void LoadLevelByNumber(int number)
     {
-        SceneManager.LoadScene(levelSelectionMenuName, LoadSceneMode.Single);
+        SceneManager.LoadScene(levelDictionary[number].sceneName, LoadSceneMode.Single);
+    }
+
+    public void LoadMenu(int sceneBuildId)
+    {
+        SceneManager.LoadScene(sceneBuildId, LoadSceneMode.Single);
     }
 
     public void QuitGame()
@@ -15,14 +24,16 @@ public class MenuController : MonoBehaviour
         Application.Quit(0);
     }
 
-    public void DisplayPopUp()
+    public void Awake()
     {
-
-    }
-
-    public void DisplayLevelSelectionMenu()
-    {
-
+        if(levelDataArray.Length > 0)
+        {
+            levelDictionary = new Dictionary<int, LevelData>();
+            foreach (int i in Enum.GetValues(typeof(LevelName)))
+            {
+                levelDictionary.Add(i, levelDataArray[i]);
+            }
+        }
     }
 
 }

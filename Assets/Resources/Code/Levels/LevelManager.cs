@@ -17,7 +17,7 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
 
     public void RestartLevel()
     {
-        Destroy(GameEventManager.Instance);
+        GameEventManager.Instance.UnsubscribeObserversToEvent();
         SceneManager.LoadScene(currentLevelName.ToString(), LoadSceneMode.Single);
     }
     public void EnablePlayer()
@@ -30,14 +30,13 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
     }
     public void SpawnPlayer(LevelSpawner level)
     {
-        playerGO.transform.position = levelSpawner.gameObject.transform.GetChild(0).transform.position;
+        playerGO.transform.position = level.gameObject.transform.GetChild(0).transform.position;
     }
 
     public void Start()
     {
         timeController = new TimeController();
         SpawnPlayer(levelSpawner);
-        GameEventManager.Instance.NotifyObserversToEvent(EventName.EnterLevel);
     }
 
     public void Update()
@@ -55,6 +54,10 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
             case EventName.EnterLevel:
                 StartCoroutine(timeController.WaitForCountdownToStart());
                 break;
+            default:
+                timeController.StopTimer();
+                break;
+
         }
     }
 }

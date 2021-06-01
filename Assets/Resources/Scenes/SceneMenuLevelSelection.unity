@@ -1095,9 +1095,9 @@ RectTransform:
   m_Father: {fileID: 7252109988497416768}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -798, y: 304}
+  m_AnchorMin: {x: 0, y: 0.708}
+  m_AnchorMax: {x: 0, y: 0.708}
+  m_AnchoredPosition: {x: 483, y: 5}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1325569919
@@ -1618,9 +1618,9 @@ RectTransform:
   m_Father: {fileID: 7252109988497416768}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1110, y: 586}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 171, y: -134}
   m_SizeDelta: {x: 55, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1746332055
@@ -1711,7 +1711,7 @@ MonoBehaviour:
   clickEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7252109988497416801}
+      - m_Target: {fileID: 0}
         m_MethodName: LoadMenuScene
         m_Mode: 5
         m_Arguments:
@@ -1787,9 +1787,9 @@ RectTransform:
   m_Father: {fileID: 7252109988497416768}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -392, y: 304}
+  m_AnchorMin: {x: 0, y: 0.708}
+  m_AnchorMax: {x: 0, y: 0.708}
+  m_AnchoredPosition: {x: 889, y: 5}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1826937701
@@ -2084,7 +2084,6 @@ GameObject:
   - component: {fileID: 7252109988497416798}
   - component: {fileID: 7252109988497416797}
   - component: {fileID: 7252109988497416800}
-  - component: {fileID: 7252109988497416801}
   m_Layer: 5
   m_Name: Level Selection Canvas
   m_TagString: Untagged
@@ -2170,15 +2169,3 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8f1e02d701fa0e34eb1c4c0eff165efd, type: 2}
   - {fileID: 11400000, guid: e67f8346fd6fed2498c8c659ce6164d8, type: 2}
   - {fileID: 11400000, guid: 0f1909853655dd14d9291566425ba675, type: 2}
---- !u!114 &7252109988497416801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7252109988497416796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5667efaf566da742a7e60f5d645d6c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

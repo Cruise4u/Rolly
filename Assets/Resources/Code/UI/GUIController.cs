@@ -13,6 +13,7 @@ public class GUIController : Singleton<GUIController>,IEventObserver
     public GameObject[] guiPopUps;
     public GameObject pregameCounterGO;
     public GameObject inGameCounterGO;
+    public GameObject inputGO;
 
     string pregameCounterPath = "Prefabs/Canvases/PreGameCountdown";
     string ingameCounterPath = "Prefabs/Canvases/IngameCountdown";
@@ -52,8 +53,9 @@ public class GUIController : Singleton<GUIController>,IEventObserver
         }
     }
 
-    public void Awake()
+    public override void Awake()
     {
+        base.Awake();
         counterPrefab.LoadObject(pregameCounterGO, pregameCounterPath);
         counterPrefab.LoadObject(inGameCounterGO, ingameCounterPath);
     }

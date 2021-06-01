@@ -16,10 +16,7 @@ public class GameEventManager : Singleton<GameEventManager>
         GameEvent[] gameEvents = Resources.LoadAll<GameEvent>("Prefabs/Events");
         foreach (GameEvent gameEvent in gameEvents)
         {
-            if(!gameEventDictionary.ContainsKey(gameEvent.eventName))
-            {
-                gameEventDictionary.Add(gameEvent.eventName, gameEvent);
-            }
+            gameEventDictionary.Add(gameEvent.eventName, gameEvent);
         }
     }
     public void NotifyObserversToEvent(EventName eventName)
@@ -59,15 +56,19 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                         break;
                     case EventName.Win:
+                        gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerTriggers>());
                         //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.Lose:
+                        gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerTriggers>());
                         //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.StartBreaking:
@@ -95,6 +96,7 @@ public class GameEventManager : Singleton<GameEventManager>
                     break;
                 case EventName.ExitLevel:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerCamera>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
@@ -113,18 +115,22 @@ public class GameEventManager : Singleton<GameEventManager>
                     //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                     break;
                 case EventName.Win:
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerTriggers>());
                     //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                     break;
 
                 case EventName.Lose:
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVisualEffects>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerTriggers>());
                     //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                     break;
                 case EventName.StartBreaking:
@@ -137,17 +143,24 @@ public class GameEventManager : Singleton<GameEventManager>
         }
     }
 
-    public void Awake()
+    public override void Awake()
     {
+        base.Awake();
         Init();
         SubscribeObserversToEvent();
     }
 
-    public void OnDestroy()
+    public void Start()
     {
-        UnsubscribeObserversToEvent();
+        Instance.NotifyObserversToEvent(EventName.EnterLevel);
     }
 
+    public void OnDestroy()
+    {
+        Debug.Log("Being Destroyed?");
+        gameEventDictionary.Clear();
+        Instance.UnsubscribeObserversToEvent();
+    }
 
 }
 
