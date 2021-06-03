@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : Singleton<MenuController>
 {
+    public GameObject gameTitleGO;
     public Dictionary<int,LevelData> levelDictionary;
     public LevelData[] levelDataArray;
 
@@ -14,9 +15,29 @@ public class MenuController : Singleton<MenuController>
         SceneManager.LoadScene(levelDictionary[number].sceneName, LoadSceneMode.Single);
     }
 
-    public void LoadMenu(int sceneBuildId)
+    public void DisplayMenu(int number)
     {
-        SceneManager.LoadScene(sceneBuildId, LoadSceneMode.Single);
+        if(number == 0)
+        {
+            gameObject.transform.GetChild(number).gameObject.SetActive(true);
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            gameTitleGO.SetActive(true);
+        }
+        else if(number == 1)
+        {
+            gameObject.transform.GetChild(number).gameObject.SetActive(true);
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            gameTitleGO.SetActive(false);
+        }
+        else if(number == 2)
+        {
+            gameObject.transform.GetChild(number).gameObject.SetActive(true);
+            gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameTitleGO.SetActive(false);
+        }
     }
 
     public void QuitGame()

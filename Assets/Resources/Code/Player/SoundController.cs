@@ -2,6 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SoundName
+{
+    AcceptUISound,
+    DeclineUISound,
+    WinSound,
+    LoseSound,
+    CountdownSound,
+    StartSound,
+    BurnSound,
+    JumpSound,
+}
+
 public class SoundController : Singleton<SoundController>
 {
     public AudioSource playerAudioSource;
