@@ -9,7 +9,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     public bool isBreaking;
     public bool isJumping;
     public bool isPhysicsBodyActive;
-
+    public int numberJumps;
 
     public Vector3 ballDirection;
     private float inputAxisValue;
@@ -22,7 +22,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     }
     public void BreakMove()
     {
-        var horizontalVeocity = new Vector3(rb.velocity.x, -Physics.gravity.y, rb.velocity.z);
+        var horizontalVeocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         if (horizontalVeocity.magnitude >= 1)
         {
             rb.AddForce(-horizontalVeocity * (moveForce / 2.5f) * Time.fixedDeltaTime, ForceMode.Force);
@@ -32,23 +32,32 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     {
         if(!isInAir)
         {
-            rb.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
+            if (numberJumps > 0)
+            {
+                rb.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
+            }
         }
     }
     public void DisablePhysics()
     {
         isPhysicsBodyActive = false;
+        Debug.Log(rb);
+        rb.isKinematic = true;
     }
+
     public void EnablePhysics()
     {
         isPhysicsBodyActive = true;
+        rb.isKinematic = false;
     }
+
     public void Notified(EventName eventName)
     {
         switch (eventName)
         {
             case EventName.EnterLevel:
                 DisablePhysics();
+                numberJumps = 1;
                 break;
             case EventName.StartLevel:
                 EnablePhysics();
@@ -65,16 +74,27 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
             case EventName.Win:
                 DisablePhysics();
                 break;
+            case EventName.StartJumping:
+                isJumping = true;
+                break;
+            case EventName.EndJumping:
+                isJumping = false;
+                break;
         }
     }
     public void FixedUpdate()
     {
         if(isPhysicsBodyActive != false)
         {
-            if (isInAir == false)
+            if(isJumping == true)
             {
-                AddMovementToBall();
+                Jump();
             }
+            AddMovementToBall();
+            //if (isInAir == false)
+            //{
+
+            //}
             if (isBreaking == true)
             {
                 BreakMove();
@@ -87,6 +107,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
         if (other.CompareTag("Ground"))
         {
             isInAir = false;
+            numberJumps = 1;
         }
     }
     public void OnTriggerExit(Collider other)
@@ -94,6 +115,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
         if (other.CompareTag("Ground"))
         {
             isInAir = true;
+            numberJumps = 0;
         }
     }
 }

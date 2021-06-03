@@ -56,8 +56,8 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
                 break;
             default:
                 timeController.StopTimer();
+                GUIController.Instance.inGameCounterGO.SetActive(false);
                 break;
-
         }
     }
 }

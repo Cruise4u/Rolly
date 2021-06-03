@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>,IEventObserver
+public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>
 {
     public float speed = 0.5f;
     private float t = 0.0f;
@@ -32,16 +32,4 @@ public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>,IEvent
         }
     }
 
-    public void Notified(EventName eventName)
-    {
-        switch (eventName)
-        {
-            case EventName.Lose:
-                isShaderActive = true;
-                break;
-            default:
-                isShaderActive = false;
-                break;
-        }
-    }
 }

@@ -24,8 +24,9 @@ public class MenuController : Singleton<MenuController>
         Application.Quit(0);
     }
 
-    public void Awake()
+    public override void Awake()
     {
+        base.Awake();
         if(levelDataArray.Length > 0)
         {
             levelDictionary = new Dictionary<int, LevelData>();

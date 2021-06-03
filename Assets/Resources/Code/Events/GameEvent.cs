@@ -32,11 +32,13 @@ public enum EventName
 {
     EndBreaking,
     EndLevel,
+    EndJumping,
     EnterLevel,
     ExitLevel,
     Lose,
     PauseLevel,
     StartBreaking,
+    StartJumping,
     StartLevel,
     Win,
 }

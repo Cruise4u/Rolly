@@ -11,7 +11,6 @@ public class PlayerScore : MonoBehaviour
         levelScoreDictionary = new Dictionary<int, LevelData>();
     }
 
-
     public void AddScore()
     {
 
