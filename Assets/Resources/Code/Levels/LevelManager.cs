@@ -7,12 +7,11 @@ using UnityEngine.SceneManagement;
 public class LevelManager : Singleton<LevelManager>,IEventObserver
 {
     #region Class Field Members
+    public TimeController timeController;
     public GameObject playerGO;
     public LevelSpawner levelSpawner;
-    public TimeController timeController;
+    public LevelData currentLevelData;
     public LevelName currentLevelName;
-    private bool isLevelStarted;
-    private bool isLevelFinished;
     #endregion
 
     public void RestartLevel()
@@ -38,7 +37,6 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
         timeController = new TimeController();
         SpawnPlayer(levelSpawner);
     }
-
     public void Update()
     {
         if (timeController.isCountingEverySecond != false)
@@ -46,7 +44,6 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
             timeController.CountTimeElapsed(Time.deltaTime);
         }
     }
-
     public void Notified(EventName eventName)
     {
         switch (eventName)

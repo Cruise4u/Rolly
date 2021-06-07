@@ -34,7 +34,10 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
         {
             if (numberJumps > 0)
             {
-                rb.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
+                var jumpVector = Vector3.up * jumpForce * Time.fixedDeltaTime;
+                rb.AddForce(jumpVector, ForceMode.Impulse);
+                Debug.Log(jumpVector);
+                SoundController.Instance.PlaySound("JumpSound");
             }
         }
     }
@@ -44,13 +47,11 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
         Debug.Log(rb);
         rb.isKinematic = true;
     }
-
     public void EnablePhysics()
     {
         isPhysicsBodyActive = true;
         rb.isKinematic = false;
     }
-
     public void Notified(EventName eventName)
     {
         switch (eventName)
@@ -86,7 +87,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     {
         if(isPhysicsBodyActive != false)
         {
-            if(isJumping == true)
+            if(isJumping == true && isInAir == false)
             {
                 Jump();
             }
@@ -106,6 +107,8 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     {
         if (other.CompareTag("Ground"))
         {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
             isInAir = false;
             numberJumps = 1;
         }

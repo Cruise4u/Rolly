@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public enum LevelName
 {
+    SceneLevelTutorial,
     SceneLevel001,
     SceneLevel002,
     SceneLevel003,
@@ -16,6 +17,8 @@ public class LevelData : ScriptableObject
 {
     public LevelName levelName;
     public string sceneName;
+    public int[] scoreGoalArray;
+
 
     public void OnValidate()
     {

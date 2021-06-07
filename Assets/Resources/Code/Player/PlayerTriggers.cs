@@ -10,14 +10,15 @@ public class PlayerTriggers : MonoBehaviour,IEventObserver
             case EventName.Win:
                 GUIController.Instance.inputGO.SetActive(false);
                 gameObject.SetActive(false);
+                SoundController.Instance.PlaySound("WinSound");
                 break;
 
             case EventName.Lose:
-
+                SoundController.Instance.PlaySound("LoseSound");
                 break;
 
             case EventName.EnterLevel:
-
+                SoundController.Instance.PlayMusic(LevelManager.Instance.currentLevelName.ToString());
                 break;
         }
     }

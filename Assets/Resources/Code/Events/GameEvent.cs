@@ -11,7 +11,10 @@ public class GameEvent : ScriptableObject
 
     public void SubscribeObserver(IEventObserver observer)
     {
-        observersList.Add(observer);
+        if (observer != null)
+        {
+            observersList.Add(observer);
+        }
     }
 
     public void UnsubscribeObserver(IEventObserver observer)

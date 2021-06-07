@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour,IEventObserver
     {
         PlayerPhysics.Instance.ballDirection = new Vector3(playerJoystick.Vertical, 0.0f, -playerJoystick.Horizontal);
     }
-
     //Call the Jump action from the ball physics
     //
     public void JumpAction()
@@ -35,7 +34,6 @@ public class PlayerController : MonoBehaviour,IEventObserver
     {
         isInputBlocked = false;
     }
-
     public void Notified(EventName eventName)
     {
         switch (eventName)
@@ -44,7 +42,6 @@ public class PlayerController : MonoBehaviour,IEventObserver
                 BlockInput();
                 break;
             case EventName.StartLevel:
-                Debug.Log("Unblocking Input!");
                 UnblockInput();
                 break;
             case EventName.EndLevel:
@@ -58,7 +55,6 @@ public class PlayerController : MonoBehaviour,IEventObserver
                 break;
         }
     }
-
     public void Update()
     {
         if(isInputBlocked != true)

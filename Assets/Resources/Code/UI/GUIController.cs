@@ -15,8 +15,8 @@ public class GUIController : Singleton<GUIController>,IEventObserver
     public GameObject inGameCounterGO;
     public GameObject inputGO;
 
-    string pregameCounterPath = "Prefabs/Canvases/PreGameCountdown";
-    string ingameCounterPath = "Prefabs/Canvases/IngameCountdown";
+    public GameObject scoreUIStarParent;
+    public Sprite fullStar;
 
     public void DisplayWinPopup()
     {
@@ -40,10 +40,55 @@ public class GUIController : Singleton<GUIController>,IEventObserver
         gui.GetComponent<TextMeshProUGUI>().text = message;
     }
 
+    public void AttributeStarToScoreUI(int number)
+    {
+        if (number == 1)
+        {
+            var parent = scoreUIStarParent.transform.GetChild(0);
+            ChangeStarSprite(parent.GetChild(0).gameObject);
+        }
+        else if (number == 2)
+        {
+            var parent = scoreUIStarParent.transform.GetChild(1);
+            ChangeStarSprite(parent.GetChild(0).gameObject);
+            ChangeStarSprite(parent.GetChild(1).gameObject);
+        }
+        else if (number == 3)
+        {
+            var parent = scoreUIStarParent.transform.GetChild(2);
+            ChangeStarSprite(parent.GetChild(0).gameObject);
+            ChangeStarSprite(parent.GetChild(1).gameObject);
+            ChangeStarSprite(parent.GetChild(2).gameObject);
+        }
+    }
+
+    public void ChangeStarSprite(GameObject starUIGO)
+    {
+        starUIGO.GetComponent<Image>().sprite = fullStar;
+    }
+
+    public void SetScoreGoalForEachStar()
+    {
+        if(scoreUIStarParent != null)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var parent = scoreUIStarParent.transform.GetChild(i);
+                var lastChild = parent.childCount;
+                Debug.Log(parent.GetChild(lastChild - 1).gameObject);
+                WriteTextDescription(parent.GetChild(lastChild - 1).gameObject, LevelManager.Instance.currentLevelData.scoreGoalArray[i].ToString());
+            }
+        }
+        Debug.Log("Nothing Happened!");
+    }
+
     public void Notified(EventName eventName)
     {
         switch (eventName)
         {
+            case EventName.EnterLevel:
+                SetScoreGoalForEachStar();
+                break;
             case EventName.Win:
                 DisplayWinPopup();
                 break;
@@ -53,10 +98,4 @@ public class GUIController : Singleton<GUIController>,IEventObserver
         }
     }
 
-    public override void Awake()
-    {
-        base.Awake();
-        counterPrefab.LoadObject(pregameCounterGO, pregameCounterPath);
-        counterPrefab.LoadObject(inGameCounterGO, ingameCounterPath);
-    }
 }

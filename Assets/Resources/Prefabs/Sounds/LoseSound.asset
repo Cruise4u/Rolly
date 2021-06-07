@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9acea626a472ba642b9b3512fc85918e, type: 3}
-  m_Name: SceneLevelData002
+  m_Script: {fileID: 11500000, guid: 8216afc2a8008db4cbc9f49f8496e25d, type: 3}
+  m_Name: LoseSound
   m_EditorClassIdentifier: 
-  levelName: 2
-  sceneName: SceneLevel002
-  scoreGoalArray: 
+  soundName: LoseSound
+  audioClip: {fileID: 8300000, guid: 5fdb13d3756c84fecac96f5a2d124370, type: 3}
