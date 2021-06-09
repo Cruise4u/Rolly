@@ -7,7 +7,6 @@ public interface IEventObserver
     void Notified(EventName eventName);
 }
 
-
 public class GameEventManager : Singleton<GameEventManager>
 {
     public Dictionary<EventName, GameEvent> gameEventDictionary;
@@ -21,6 +20,7 @@ public class GameEventManager : Singleton<GameEventManager>
             gameEventDictionary.Add(gameEvent.eventName, gameEvent);
         }
     }
+
     public void NotifyObserversToEvent(EventName eventName)
     {
         gameEventDictionary[eventName].NotifyObservers();
@@ -40,19 +40,17 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
-                        //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<TutorialManager>());
                         break;
                     case EventName.ExitLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
-                        //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.StartLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
-                        //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.EndLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
@@ -66,7 +64,6 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelScore>());
-                        //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.Lose:
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
@@ -76,7 +73,6 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelScore>());
-                        //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                         break;
                     case EventName.StartBreaking:
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
@@ -90,6 +86,10 @@ public class GameEventManager : Singleton<GameEventManager>
                     case EventName.EndJumping:
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
                         break;
+                    case EventName.Tutorial:
+                        gameEvent.SubscribeObserver(FindObjectOfType<TutorialManager>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<GateManager>());
+                        break;
                 }
             }
         }
@@ -101,12 +101,12 @@ public class GameEventManager : Singleton<GameEventManager>
             switch (gameEvent.eventName)
             {
                 case EventName.EnterLevel:
-                    gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerCamera>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
-                    //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<TutorialManager>());
                     break;
                 case EventName.ExitLevel:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
@@ -114,19 +114,17 @@ public class GameEventManager : Singleton<GameEventManager>
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerCamera>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
-                    //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                     break;
                 case EventName.StartLevel:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVFXController>());
-                    //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<TutorialManager>());
                     break;
                 case EventName.EndLevel:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVFXController>());
-                    //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                     break;
                 case EventName.Win:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
@@ -136,7 +134,7 @@ public class GameEventManager : Singleton<GameEventManager>
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerTriggers>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelScore>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
-                    //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<TutorialManager>());
                     break;
 
                 case EventName.Lose:
@@ -147,13 +145,16 @@ public class GameEventManager : Singleton<GameEventManager>
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVFXController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerTriggers>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelScore>());
-                    //gameEvent.SubscribeObserver(FindObjectOfType<PlayerSounds>());
                     break;
                 case EventName.StartBreaking:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     break;
                 case EventName.EndBreaking:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
+                    break;
+                case EventName.Tutorial:
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<TutorialManager>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<GateManager>());
                     break;
             }
         }
@@ -168,6 +169,7 @@ public class GameEventManager : Singleton<GameEventManager>
 
     public void Start()
     {
+        Debug.Log("Start");
         NotifyObserversToEvent(EventName.EnterLevel);
     }
 

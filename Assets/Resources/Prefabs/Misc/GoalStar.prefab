@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8111162707063434543}
   m_Layer: 0
   m_Name: GoalStar
-  m_TagString: Win
+  m_TagString: Tutorial
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,9 +27,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8111877933583322450}
-  m_LocalRotation: {x: -0.39273098, y: 0.5880158, z: 0.3927303, w: 0.588016}
-  m_LocalPosition: {x: 30.95, y: 2.1413393, z: 0.14}
-  m_LocalScale: {x: 1, y: 1, z: 1.0000004}
+  m_LocalRotation: {x: -0.39272952, y: 0.5880166, z: 0.39272952, w: 0.5880166}
+  m_LocalPosition: {x: 15.82, y: -0.01, z: 10.369999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0

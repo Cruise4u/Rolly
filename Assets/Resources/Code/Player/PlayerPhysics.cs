@@ -18,14 +18,14 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     #endregion
     public void AddMovementToBall() 
     {
-        rb.AddForce(ballDirection * moveForce * Time.fixedDeltaTime, ForceMode.Force);
+        rb.AddForce(ballDirection * moveForce * Time.fixedDeltaTime, ForceMode.VelocityChange);
     }
     public void BreakMove()
     {
         var horizontalVeocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         if (horizontalVeocity.magnitude >= 1)
         {
-            rb.AddForce(-horizontalVeocity * (moveForce / 2.5f) * Time.fixedDeltaTime, ForceMode.Force);
+            rb.AddForce(-horizontalVeocity * (moveForce / 2.5f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
     }   
     public void Jump()
@@ -36,7 +36,6 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
             {
                 var jumpVector = Vector3.up * jumpForce * Time.fixedDeltaTime;
                 rb.AddForce(jumpVector, ForceMode.Impulse);
-                Debug.Log(jumpVector);
                 SoundController.Instance.PlaySound("JumpSound");
             }
         }
@@ -44,7 +43,6 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     public void DisablePhysics()
     {
         isPhysicsBodyActive = false;
-        Debug.Log(rb);
         rb.isKinematic = true;
     }
     public void EnablePhysics()
@@ -52,6 +50,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
         isPhysicsBodyActive = true;
         rb.isKinematic = false;
     }
+
     public void Notified(EventName eventName)
     {
         switch (eventName)
@@ -68,6 +67,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
                 break;
             case EventName.StartBreaking:
                 isBreaking = true;
+                GameEventManager.Instance.NotifyObserversToEvent(EventName.EndBreaking);
                 break;
             case EventName.EndBreaking:
                 isBreaking = false;
@@ -77,9 +77,13 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
                 break;
             case EventName.StartJumping:
                 isJumping = true;
+                GameEventManager.Instance.NotifyObserversToEvent(EventName.EndJumping);
                 break;
             case EventName.EndJumping:
                 isJumping = false;
+                break;
+            case EventName.Tutorial:
+                EnablePhysics();
                 break;
         }
     }

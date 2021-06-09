@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Michsky.UI.ModernUIPack;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -6,9 +7,6 @@ using UnityEngine.UI;
 
 public class GUIController : Singleton<GUIController>,IEventObserver
 {
-    //Array of GameObjects that have UI elements
-    //
-    public PrefabSO counterPrefab;
     public GameObject parentPopup;
     public GameObject[] guiPopUps;
     public GameObject pregameCounterGO;
@@ -17,6 +15,7 @@ public class GUIController : Singleton<GUIController>,IEventObserver
 
     public GameObject scoreUIStarParent;
     public Sprite fullStar;
+
 
     public void DisplayWinPopup()
     {
@@ -37,7 +36,14 @@ public class GUIController : Singleton<GUIController>,IEventObserver
 
     public void WriteTextDescription(GameObject gui,string message)
     {
-        gui.GetComponent<TextMeshProUGUI>().text = message;
+        if(gui.GetComponent<ModalWindowManager>())
+        {
+            gui.GetComponent<ModalWindowManager>().descriptionText = message;
+        }
+        else
+        {
+            gui.GetComponent<TextMeshProUGUI>().text = message;
+        }
     }
 
     public void AttributeStarToScoreUI(int number)

@@ -2,10 +2,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour,IEventObserver
+public class PlayerController : Singleton<PlayerController>,IEventObserver
 {
     public FixedJoystick playerJoystick;
-    public BreakButton breakButton;
     public bool isInputBlocked;
 
     //Set values for physics
@@ -19,13 +18,23 @@ public class PlayerController : MonoBehaviour,IEventObserver
     }
     //Call the Jump action from the ball physics
     //
-    public void JumpAction()
+
+    public void BreakAction()
     {
         if (isInputBlocked != true)
         {
-            PlayerPhysics.Instance.Jump();
+            GameEventManager.Instance.NotifyObserversToEvent(EventName.StartBreaking);
         }
     }
+
+    public void JumpAction()
+    {
+        if (isInputBlocked != true && PlayerPhysics.Instance.numberJumps > 0)
+        {
+            GameEventManager.Instance.NotifyObserversToEvent(EventName.StartJumping);
+        }
+    }
+
     public void BlockInput()
     {
         isInputBlocked = true;
@@ -52,6 +61,9 @@ public class PlayerController : MonoBehaviour,IEventObserver
                 break;
             case EventName.Lose:
                 BlockInput();
+                break;
+            case EventName.Tutorial:
+                UnblockInput();
                 break;
         }
     }

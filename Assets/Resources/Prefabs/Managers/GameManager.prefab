@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 800879031489694528}
   - component: {fileID: 1835360448940366780}
   - component: {fileID: 1835360448940366781}
+  - component: {fileID: 6612162744219031769}
+  - component: {fileID: 8948116900977427934}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -174,3 +176,32 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6612162744219031769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9040272392002904682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85d82d3f1d7e181448463b1302da2603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseCount: 0
+  tutorialGUI: {fileID: 0}
+  temporaryStarGoal: {fileID: 0}
+  wayPoints: []
+--- !u!114 &8948116900977427934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9040272392002904682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35d8ab4fc4297b040b483f5c6cfe0732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gateList: []

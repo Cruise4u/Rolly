@@ -33,6 +33,11 @@ public class PlayerTriggers : MonoBehaviour,IEventObserver
         {
             GameEventManager.Instance.NotifyObserversToEvent(EventName.Lose);
         }
+        if (other.CompareTag(TagEnum.Tutorial.ToString()))
+        {
+            GameEventManager.Instance.NotifyObserversToEvent(EventName.Tutorial);
+            Destroy(other.gameObject);
+        }
     }
 }
 
@@ -41,4 +46,5 @@ public enum TagEnum
     Ground,
     Win,
     Defeat,
+    Tutorial,
 }
