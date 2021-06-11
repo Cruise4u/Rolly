@@ -41,6 +41,7 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<TutorialManager>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         break;
                     case EventName.ExitLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
@@ -51,6 +52,7 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         break;
                     case EventName.EndLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
@@ -64,6 +66,7 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelScore>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         break;
                     case EventName.Lose:
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
@@ -73,18 +76,7 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelScore>());
-                        break;
-                    case EventName.StartBreaking:
-                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
-                        break;
-                    case EventName.EndBreaking:
-                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
-                        break;
-                    case EventName.StartJumping:
-                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
-                        break;
-                    case EventName.EndJumping:
-                        gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         break;
                     case EventName.Tutorial:
                         gameEvent.SubscribeObserver(FindObjectOfType<TutorialManager>());
@@ -107,6 +99,7 @@ public class GameEventManager : Singleton<GameEventManager>
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<TutorialManager>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<SoundController>());
                     break;
                 case EventName.ExitLevel:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
@@ -120,6 +113,7 @@ public class GameEventManager : Singleton<GameEventManager>
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVFXController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<TutorialManager>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<SoundController>());
                     break;
                 case EventName.EndLevel:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
@@ -135,8 +129,8 @@ public class GameEventManager : Singleton<GameEventManager>
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelScore>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<TutorialManager>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<SoundController>());
                     break;
-
                 case EventName.Lose:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<GUIController>());
@@ -145,6 +139,7 @@ public class GameEventManager : Singleton<GameEventManager>
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVFXController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerTriggers>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelScore>());
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<SoundController>());
                     break;
                 case EventName.StartBreaking:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
@@ -167,11 +162,6 @@ public class GameEventManager : Singleton<GameEventManager>
         SubscribeObserversToEvent();
     }
 
-    public void Start()
-    {
-        Debug.Log("Start");
-        NotifyObserversToEvent(EventName.EnterLevel);
-    }
 
     public void OnDestroy()
     {

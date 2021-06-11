@@ -16,7 +16,6 @@ public class GUIController : Singleton<GUIController>,IEventObserver
     public GameObject scoreUIStarParent;
     public Sprite fullStar;
 
-
     public void DisplayWinPopup()
     {
         parentPopup.SetActive(true);
@@ -36,14 +35,7 @@ public class GUIController : Singleton<GUIController>,IEventObserver
 
     public void WriteTextDescription(GameObject gui,string message)
     {
-        if(gui.GetComponent<ModalWindowManager>())
-        {
-            gui.GetComponent<ModalWindowManager>().descriptionText = message;
-        }
-        else
-        {
-            gui.GetComponent<TextMeshProUGUI>().text = message;
-        }
+        gui.GetComponent<TextMeshProUGUI>().text = message;
     }
 
     public void AttributeStarToScoreUI(int number)
@@ -97,10 +89,11 @@ public class GUIController : Singleton<GUIController>,IEventObserver
                 break;
             case EventName.Win:
                 DisplayWinPopup();
+                inputGO.SetActive(false);
                 break;
-            case EventName.Lose:
-                DisplayLosePopup();
-                break;
+            //case EventName.Lose:
+            //    DisplayLosePopup();
+            //    break;
         }
     }
 

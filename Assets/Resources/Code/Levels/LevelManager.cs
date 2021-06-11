@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : Singleton<LevelManager>,IEventObserver
+public class LevelManager : Singleton<LevelManager>, IEventObserver
 {
     #region Class Field Members
     public TimeController timeController;
@@ -13,6 +13,13 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
     public LevelData currentLevelData;
     public LevelName currentLevelName;
     #endregion
+
+    public IEnumerator RespawnPlayerAfterSeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        SpawnPlayer(levelSpawner);
+        GameEventManager.Instance.NotifyObserversToEvent(EventName.StartLevel);
+    }
 
     public void RestartLevel()
     {
@@ -36,6 +43,7 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
     {
         timeController = new TimeController();
         SpawnPlayer(levelSpawner);
+        GameEventManager.Instance.NotifyObserversToEvent(EventName.EnterLevel);
     }
     public void Update()
     {
@@ -44,16 +52,41 @@ public class LevelManager : Singleton<LevelManager>,IEventObserver
             timeController.CountTimeElapsed(Time.deltaTime);
         }
     }
+
     public void Notified(EventName eventName)
     {
         switch (eventName)
         {
             case EventName.EnterLevel:
-                StartCoroutine(timeController.WaitForCountdownToStart());
+                if (currentLevelName != LevelName.SceneLevelTutorial)
+                {
+                    StartCoroutine(timeController.WaitForCountdownToStart());
+                }
+                else
+                {
+                    GameEventManager.Instance.NotifyObserversToEvent(EventName.StartLevel);
+                }
+                break;
+            case EventName.StartLevel:
+                SpawnPlayer(levelSpawner);
+                break;
+            case EventName.Lose:
+                if (currentLevelName != LevelName.SceneLevelTutorial)
+                {
+                    timeController.StopTimer();
+                    GUIController.Instance.inGameCounterGO.SetActive(false);
+                }
+                else
+                {
+                    StartCoroutine(RespawnPlayerAfterSeconds(2.0f));
+                }
                 break;
             default:
-                timeController.StopTimer();
-                GUIController.Instance.inGameCounterGO.SetActive(false);
+                if (currentLevelName != LevelName.SceneLevelTutorial)
+                {
+                    timeController.StopTimer();
+                    GUIController.Instance.inGameCounterGO.SetActive(false);
+                }
                 break;
         }
     }

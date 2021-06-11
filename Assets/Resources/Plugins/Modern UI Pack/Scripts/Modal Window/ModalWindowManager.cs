@@ -47,17 +47,9 @@ namespace Michsky.UI.ModernUIPack
 
         public void UpdateUI()
         {
-            try
-            {
-                windowIcon.sprite = icon;
-                windowTitle.text = titleText;
-                windowDescription.text = descriptionText;
-            }
-
-            catch
-            {
-                Debug.LogWarning("Modal Window - Cannot update the content due to missing variables.", this);
-            }
+            windowIcon.sprite = icon;
+            windowTitle.text = titleText;
+            windowDescription.text = descriptionText;
         }
 
         public void OpenWindow()

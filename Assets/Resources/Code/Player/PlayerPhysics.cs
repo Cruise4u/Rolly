@@ -25,7 +25,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
         var horizontalVeocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         if (horizontalVeocity.magnitude >= 1)
         {
-            rb.AddForce(-horizontalVeocity * (moveForce / 2.5f) * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            rb.AddForce(-horizontalVeocity * (moveForce / 1.5f) * Time.fixedDeltaTime, ForceMode.Force);
         }
     }   
     public void Jump()
@@ -50,39 +50,25 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
         isPhysicsBodyActive = true;
         rb.isKinematic = false;
     }
-
     public void Notified(EventName eventName)
     {
         switch (eventName)
         {
+
+            case EventName.Tutorial:
+                EnablePhysics();
+                break;
+            case EventName.Win:
+                DisablePhysics();
+                break;
+            case EventName.Lose:
+                DisablePhysics();
+                break;
             case EventName.EnterLevel:
                 DisablePhysics();
                 numberJumps = 1;
                 break;
             case EventName.StartLevel:
-                EnablePhysics();
-                break;
-            case EventName.Lose:
-                DisablePhysics();
-                break;
-            case EventName.StartBreaking:
-                isBreaking = true;
-                GameEventManager.Instance.NotifyObserversToEvent(EventName.EndBreaking);
-                break;
-            case EventName.EndBreaking:
-                isBreaking = false;
-                break;
-            case EventName.Win:
-                DisablePhysics();
-                break;
-            case EventName.StartJumping:
-                isJumping = true;
-                GameEventManager.Instance.NotifyObserversToEvent(EventName.EndJumping);
-                break;
-            case EventName.EndJumping:
-                isJumping = false;
-                break;
-            case EventName.Tutorial:
                 EnablePhysics();
                 break;
         }
@@ -91,21 +77,11 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     {
         if(isPhysicsBodyActive != false)
         {
-            if(isJumping == true && isInAir == false)
-            {
-                Jump();
-            }
             AddMovementToBall();
-            //if (isInAir == false)
-            //{
-
-            //}
-            if (isBreaking == true)
-            {
-                BreakMove();
-            }
         }
     }
+
+
     //Check if the ball is either in the air or in the ground
     public void OnTriggerEnter(Collider other)
     {

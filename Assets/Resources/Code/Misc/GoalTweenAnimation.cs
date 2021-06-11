@@ -10,9 +10,11 @@ public class GoalTweenAnimation : MonoBehaviour
     public void CreateStarAnimationSequence()
     {
         movementSequence = DOTween.Sequence();
-        movementSequence.Append(transform.DOMove(new Vector3(transform.position.x, starYPositions[0],transform.position.z), 1.25f, false).SetEase(Ease.Linear));
-        movementSequence.Append(transform.DOMove(new Vector3(transform.position.x, starYPositions[1], transform.position.z), 1.25f, false).SetEase(Ease.Linear));
-        movementSequence.Append(transform.DOMove(new Vector3(transform.position.x, starYPositions[2], transform.position.z), 1.25f, false).SetEase(Ease.Linear));
+        var initialPosition = transform.position;
+        movementSequence.Append(transform.DOMove(new Vector3(transform.position.x, initialPosition.y - 0.5f, transform.position.z), 1.25f, false).SetEase(Ease.Linear));
+        movementSequence.Append(transform.DOMove(new Vector3(transform.position.x, initialPosition.y + 0.5f, transform.position.z), 1.25f, false).SetEase(Ease.Linear));
+        movementSequence.Append(transform.DOMove(new Vector3(transform.position.x, initialPosition.y, transform.position.z), 1.25f, false).SetEase(Ease.Linear));
+        movementSequence.OnComplete(RestartStarAnimationSequence);
     }
 
     public void RestartStarAnimationSequence()
@@ -20,21 +22,9 @@ public class GoalTweenAnimation : MonoBehaviour
         movementSequence.Restart(true, 0.5f);
     }
 
-    public void PlayStarAnimationSequence()
-    {
-        movementSequence.Play().OnComplete(RestartStarAnimationSequence);
-    }
-
     public void Start()
     {
         CreateStarAnimationSequence();
-        PlayStarAnimationSequence();
     }
-
-    public void Awake()
-    {
-        CreateStarAnimationSequence();
-    }
-
 
 }

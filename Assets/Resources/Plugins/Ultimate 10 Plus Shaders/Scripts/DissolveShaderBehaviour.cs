@@ -6,15 +6,22 @@ using UnityEngine;
 public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>
 {
     public float speed = 0.5f;
-    private float t = 0.0f;
+    public float t = 0.0f;
     private MeshRenderer meshRenderer;
     private Material[] mats;
 
     public bool isShaderActive;
 
-    private void Start(){
+    private void Awake()
+    {
         meshRenderer = GetComponent<MeshRenderer>();
         mats = meshRenderer.materials;
+    }
+
+    public void ResetEffect()
+    {
+        mats[0].SetFloat("_Cutoff", 0);
+        meshRenderer.materials = mats;
     }
 
     private void DissolveEffect()

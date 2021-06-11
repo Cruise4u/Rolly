@@ -14,16 +14,20 @@ public enum SoundName
     JumpSound,
 }
 
-public class SoundController : Singleton<SoundController>
+public class SoundController : Singleton<SoundController>,IEventObserver
 {
-    public AudioSource playerAudioSource;
+    public AudioSource playerMusicSource;
+    public AudioSource playerSfxSource;
     public List<SoundPrefab> soundPrefabList;
-    public Dictionary<string, SoundPrefab> audioDictionary;
+
+    public Dictionary<string, SoundPrefab> musicSourceDictionary;
+    public Dictionary<string, SoundPrefab> sfxSourceDictionary;
 
     public override void Awake()
     {
         base.Awake();
-        audioDictionary = new Dictionary<string, SoundPrefab>();
+        musicSourceDictionary = new Dictionary<string, SoundPrefab>();
+        sfxSourceDictionary = new Dictionary<string, SoundPrefab>();
         AddEntriesToAudioDictionary();
     }
 
@@ -31,33 +35,56 @@ public class SoundController : Singleton<SoundController>
     {
         foreach(SoundPrefab sound in soundPrefabList)
         {
-            audioDictionary.Add(sound.soundName, sound);
+            if(sound.audioType == AudioType.Music)
+            {
+                musicSourceDictionary.Add(sound.soundName, sound);
+            }
+            else
+            {
+                sfxSourceDictionary.Add(sound.soundName, sound);
+            }
         }
     }
 
     public void PlayMusic(string musicName)
     {
-        Debug.Log(audioDictionary[musicName].audioClip);
-        playerAudioSource.clip = audioDictionary[musicName].audioClip;
-        playerAudioSource.Play();
+        playerMusicSource.clip = musicSourceDictionary[musicName].audioClip;
+        playerMusicSource.Play();
     }
 
     public void StopMusic()
     {
-        playerAudioSource.Stop();
+        playerMusicSource.Stop();
     }
 
     public void PlaySound(string soundName)
     {
-        if (!playerAudioSource.isPlaying)
+        if(!playerSfxSource.isPlaying)
         {
-            playerAudioSource.PlayOneShot(audioDictionary[soundName].audioClip);
+            playerSfxSource.PlayOneShot(sfxSourceDictionary[soundName].audioClip);
         }
     }
 
-    public void StopSound()
+    public void StopAllSoundSources()
     {
-        playerAudioSource.Stop();
+        playerMusicSource.Stop();
+        playerSfxSource.Stop();
     }
 
+    public void Notified(EventName eventName)
+    {
+        switch (eventName)
+        {
+            case EventName.Win:
+                PlaySound("WinSound");
+                break;
+            case EventName.Lose:
+                PlaySound("LoseSound");
+                StopMusic();
+                break;
+            case EventName.StartLevel:
+                PlayMusic(LevelManager.Instance.currentLevelName.ToString());
+                break;
+        }
+    }
 }
