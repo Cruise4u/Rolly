@@ -5,22 +5,64 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
 {
     #region Class Field Members
     public Rigidbody rb;
+    public PhysicMaterial physicMaterial;
     public bool isInAir;
     public bool isBreaking;
     public bool isJumping;
     public bool isPhysicsBodyActive;
     public int numberJumps;
 
-    public Vector3 ballDirection;
+    public Vector3 ballVelocity;
     private float inputAxisValue;
     public float moveForce;
     public float jumpForce;
     #endregion
-    public void AddMovementToBall() 
+
+
+    public void Start()
     {
-        rb.AddForce(ballDirection * moveForce * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        PlayerController.Instance.inputDelegate += SetBallVelocity;
+        PlayerController.Instance.jumpDelegate += JumpBall;
+        PlayerTriggers.Instance.OnAirDelegate += SetBallOnAir;
+        PlayerTriggers.Instance.OnGroundDelegate += SetBallOnGround;
     }
-    public void BreakMove()
+
+    public void SetBallVelocity(Vector3 velocity)
+    {
+        ballVelocity = velocity;
+    }
+
+    public void SetBallOnAir()
+    {
+        isInAir = true;
+        numberJumps = 0;
+    }
+
+    public void SetBallOnGround()
+    {
+        //rb.velocity = Vector3.zero;
+        //rb.angularVelocity = Vector3.zero;
+        isInAir = false;
+        numberJumps = 1;
+    }
+
+    public void MoveBall()
+    {
+        rb.AddForce(ballVelocity * moveForce * Time.fixedDeltaTime, ForceMode.VelocityChange);
+    }
+
+    public void JumpBall()
+    {
+        if(!isInAir)
+        {
+            if(numberJumps > 0)
+            {
+                rb.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
+            }
+        }
+    }
+
+    public void BreakBall()
     {
         var horizontalVeocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         if (horizontalVeocity.magnitude >= 1)
@@ -28,28 +70,37 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
             rb.AddForce(-horizontalVeocity * (moveForce / 1.5f) * Time.fixedDeltaTime, ForceMode.Force);
         }
     }   
-    public void Jump()
+
+    public void CheckForBallBouncinessNeed()
     {
-        if(!isInAir)
+        if(rb.velocity.magnitude <= 2.5f && !isInAir)
         {
-            if (numberJumps > 0)
-            {
-                var jumpVector = Vector3.up * jumpForce * Time.fixedDeltaTime;
-                rb.AddForce(jumpVector, ForceMode.Impulse);
-                SoundController.Instance.PlaySound("JumpSound");
-            }
+            physicMaterial.bounciness = 0;
+        }
+        else
+        {
+            physicMaterial.bounciness = 0.25f;
         }
     }
-    public void DisablePhysics()
+
+    public void GetCurrentVelocityInformation()
     {
-        isPhysicsBodyActive = false;
-        rb.isKinematic = true;
+        Debug.Log("Velocity is :" + rb.velocity);
+        Debug.Log("Angular Velocity is :" + rb.angularVelocity);
     }
+
     public void EnablePhysics()
     {
         isPhysicsBodyActive = true;
         rb.isKinematic = false;
     }
+
+    public void DisablePhysics()
+    {
+        isPhysicsBodyActive = false;
+        rb.isKinematic = true;
+    }
+
     public void Notified(EventName eventName)
     {
         switch (eventName)
@@ -73,32 +124,13 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
                 break;
         }
     }
+
     public void FixedUpdate()
     {
         if(isPhysicsBodyActive != false)
         {
-            AddMovementToBall();
-        }
-    }
-
-
-    //Check if the ball is either in the air or in the ground
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Ground"))
-        {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            isInAir = false;
-            numberJumps = 1;
-        }
-    }
-    public void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Ground"))
-        {
-            isInAir = true;
-            numberJumps = 0;
+            MoveBall();
+            CheckForBallBouncinessNeed();
         }
     }
 }

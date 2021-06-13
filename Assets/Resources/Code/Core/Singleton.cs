@@ -31,6 +31,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
         }
         else
         {
+            Debug.Log("destroying this game object for some reason..?");
             Destroy(gameObject);
             return;
         }

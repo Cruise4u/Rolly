@@ -1,8 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayerTriggers : MonoBehaviour,IEventObserver
+public class PlayerTriggers : Singleton<PlayerTriggers>,IEventObserver
 {
+    public event Action OnAirDelegate;
+    public event Action OnGroundDelegate;
+
     public void Notified(EventName eventName)
     {
         switch (eventName)
@@ -18,6 +21,10 @@ public class PlayerTriggers : MonoBehaviour,IEventObserver
 
     public void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag(TagEnum.Ground.ToString()))
+        {
+            OnGroundDelegate();
+        }
         if(other.CompareTag(TagEnum.Win.ToString()))
         {
             GameEventManager.Instance.NotifyObserversToEvent(EventName.Win);
@@ -30,6 +37,14 @@ public class PlayerTriggers : MonoBehaviour,IEventObserver
         {
             GameEventManager.Instance.NotifyObserversToEvent(EventName.Tutorial);
             Destroy(other.gameObject);
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag(TagEnum.Ground.ToString()))
+        {
+            OnAirDelegate.Invoke();
         }
     }
 }

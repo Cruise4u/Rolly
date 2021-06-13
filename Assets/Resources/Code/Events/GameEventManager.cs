@@ -41,7 +41,7 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<TutorialManager>());
-                        gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
+                        //gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         break;
                     case EventName.ExitLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
@@ -52,7 +52,7 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
-                        gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
+                        //gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         break;
                     case EventName.EndLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
