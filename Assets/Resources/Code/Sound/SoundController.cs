@@ -82,7 +82,7 @@ public class SoundController : Singleton<SoundController>,IEventObserver
                 PlaySound("LoseSound");
                 StopMusic();
                 break;
-            case EventName.StartLevel:
+            case EventName.EnterLevel:
                 PlayMusic(LevelManager.Instance.currentLevelName.ToString());
                 break;
         }

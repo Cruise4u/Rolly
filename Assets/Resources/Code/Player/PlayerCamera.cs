@@ -34,8 +34,6 @@ public class PlayerCamera : Singleton<PlayerCamera>,IEventObserver
                 break;
         }
     }
-
-
     public void LateUpdate()
     {
         if(cameraRig != null)

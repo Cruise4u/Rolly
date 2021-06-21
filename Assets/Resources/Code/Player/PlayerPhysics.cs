@@ -18,7 +18,6 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     public float jumpForce;
     #endregion
 
-
     public void Start()
     {
         PlayerController.Instance.inputDelegate += SetBallVelocity;
@@ -58,6 +57,7 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
             if(numberJumps > 0)
             {
                 rb.AddForce(Vector3.up * jumpForce * Time.fixedDeltaTime, ForceMode.Impulse);
+                SoundController.Instance.PlaySound("JumpSound");
             }
         }
     }
@@ -105,7 +105,6 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
     {
         switch (eventName)
         {
-
             case EventName.Tutorial:
                 EnablePhysics();
                 break;
@@ -116,10 +115,12 @@ public class PlayerPhysics : Singleton<PlayerPhysics>,IEventObserver
                 DisablePhysics();
                 break;
             case EventName.EnterLevel:
+                Debug.Log("Disable physics!");
                 DisablePhysics();
                 numberJumps = 1;
                 break;
             case EventName.StartLevel:
+                Debug.Log("Enable physics!");
                 EnablePhysics();
                 break;
         }

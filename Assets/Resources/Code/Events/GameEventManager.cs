@@ -34,14 +34,15 @@ public class GameEventManager : Singleton<GameEventManager>
                 switch (gameEvent.eventName)
                 {
                     case EventName.EnterLevel:
+                        gameEvent.SubscribeObserver(FindObjectOfType<GameManager>());
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerCamera>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
-                        gameEvent.SubscribeObserver(FindObjectOfType<GUIController>());
+                        gameEvent.SubscribeObserver(FindObjectOfType<GUIController>()); 
                         gameEvent.SubscribeObserver(FindObjectOfType<TutorialManager>());
-                        //gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         break;
                     case EventName.ExitLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<LevelManager>());
@@ -52,7 +53,6 @@ public class GameEventManager : Singleton<GameEventManager>
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerPhysics>());
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerVFXController>());
-                        //gameEvent.SubscribeObserver(FindObjectOfType<SoundController>());
                         break;
                     case EventName.EndLevel:
                         gameEvent.SubscribeObserver(FindObjectOfType<PlayerController>());
@@ -93,6 +93,7 @@ public class GameEventManager : Singleton<GameEventManager>
             switch (gameEvent.eventName)
             {
                 case EventName.EnterLevel:
+                    gameEvent.UnsubscribeObserver(FindObjectOfType<GameManager>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerCamera>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<LevelManager>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());
@@ -113,7 +114,6 @@ public class GameEventManager : Singleton<GameEventManager>
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerPhysics>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerVFXController>());
                     gameEvent.UnsubscribeObserver(FindObjectOfType<TutorialManager>());
-                    gameEvent.UnsubscribeObserver(FindObjectOfType<SoundController>());
                     break;
                 case EventName.EndLevel:
                     gameEvent.UnsubscribeObserver(FindObjectOfType<PlayerController>());

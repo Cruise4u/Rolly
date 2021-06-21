@@ -31,7 +31,7 @@ public class PlayerController : Singleton<PlayerController>,IEventObserver
     public void KeyboardAndMouseInput()
     {
         ReadKeyboardInput();
-        ReadMouseInput();
+        //ReadMouseInput();
     }
     
     public void ReadKeyboardInput()
@@ -85,6 +85,10 @@ public class PlayerController : Singleton<PlayerController>,IEventObserver
                 {
                     inputDelegate.Invoke(new Vector3(-1, 0, 1));
                 }
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                JumpActionTest();
             }
         }
         else

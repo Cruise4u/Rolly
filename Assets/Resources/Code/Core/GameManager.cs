@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager>,IEventObserver
 {
     //Reference to device type being used
     //For example, is a mobile phone or a PC?
@@ -21,18 +21,14 @@ public class GameManager : Singleton<GameManager>
         return currentDevice;
     }
 
-    public void Start()
+    public void Notified(EventName eventName)
     {
-        playerDeviceType = GetPlayerDeviceByType();
-        if(playerDeviceType == DeviceType.Handheld)
+        switch (eventName)
         {
-            Screen.orientation = playerDeviceOrientation;
-        }
-        else if(playerDeviceType == DeviceType.Desktop)
-        {
-
+            case EventName.EnterLevel:
+                playerDeviceType = GetPlayerDeviceByType();
+                break;
         }
     }
-
 }
 

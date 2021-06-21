@@ -13,14 +13,12 @@ public class LevelManager : Singleton<LevelManager>, IEventObserver
     public LevelData currentLevelData;
     public LevelName currentLevelName;
     #endregion
-
     public IEnumerator RespawnPlayerAfterSeconds(float seconds)
     {
         yield return new WaitForSeconds(seconds);
         SpawnPlayer(levelSpawner);
         GameEventManager.Instance.NotifyObserversToEvent(EventName.StartLevel);
     }
-
     public void RestartLevel()
     {
         GameEventManager.Instance.UnsubscribeObserversToEvent();
@@ -38,37 +36,23 @@ public class LevelManager : Singleton<LevelManager>, IEventObserver
     {
         playerGO.transform.position = level.gameObject.transform.GetChild(0).transform.position;
     }
-
-    public void Start()
-    {
-        timeController = new TimeController();
-        SpawnPlayer(levelSpawner);
-        GameEventManager.Instance.NotifyObserversToEvent(EventName.EnterLevel);
-    }
-    public void Update()
-    {
-        if (timeController.isCountingEverySecond != false)
-        {
-            timeController.CountTimeElapsed(Time.deltaTime);
-        }
-    }
-
     public void Notified(EventName eventName)
     {
         switch (eventName)
         {
             case EventName.EnterLevel:
-                if (currentLevelName != LevelName.SceneLevelTutorial)
+                if(currentLevelName != LevelName.SceneLevelTutorial)
                 {
+                    SpawnPlayer(levelSpawner);
                     StartCoroutine(timeController.WaitForCountdownToStart());
                 }
                 else
                 {
-                    GameEventManager.Instance.NotifyObserversToEvent(EventName.StartLevel);
+                    SpawnPlayer(levelSpawner);
                 }
                 break;
             case EventName.StartLevel:
-                SpawnPlayer(levelSpawner);
+
                 break;
             case EventName.Lose:
                 if (currentLevelName != LevelName.SceneLevelTutorial)
@@ -88,6 +72,20 @@ public class LevelManager : Singleton<LevelManager>, IEventObserver
                     GUIController.Instance.inGameCounterGO.SetActive(false);
                 }
                 break;
+        }
+    }
+
+
+    public void Start()
+    {
+        timeController = new TimeController();
+        GameEventManager.Instance.NotifyObserversToEvent(EventName.EnterLevel);
+    }
+    public void Update()
+    {
+        if (timeController.isCountingEverySecond != false)
+        {
+            timeController.CountTimeElapsed(Time.deltaTime);
         }
     }
 }
