@@ -3,18 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>,IEventObserver
+public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>
 {
     public float speed = 0.5f;
-    private float t = 0.0f;
+    public float t = 0.0f;
     private MeshRenderer meshRenderer;
     private Material[] mats;
 
     public bool isShaderActive;
 
-    private void Start(){
+    private void Awake()
+    {
         meshRenderer = GetComponent<MeshRenderer>();
         mats = meshRenderer.materials;
+    }
+
+    public void ResetEffect()
+    {
+        mats[0].SetFloat("_Cutoff", 0);
+        meshRenderer.materials = mats;
     }
 
     private void DissolveEffect()
@@ -32,16 +39,4 @@ public class DissolveShaderBehaviour : Singleton<DissolveShaderBehaviour>,IEvent
         }
     }
 
-    public void Notified(EventName eventName)
-    {
-        switch (eventName)
-        {
-            case EventName.Lose:
-                isShaderActive = true;
-                break;
-            default:
-                isShaderActive = false;
-                break;
-        }
-    }
 }

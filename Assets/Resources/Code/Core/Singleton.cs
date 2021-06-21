@@ -1,25 +1,40 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+public class Singleton<T> : MonoBehaviour where T : Component
 {
     private static T instance;
 
-    /// <summary>
-    /// Access singleton instance through this propriety.
-    /// </summary>
     public static T Instance
     {
         get
         {
             if (instance == null)
             {
-                // Search for existing instance.
-                instance = (T)FindObjectOfType(typeof(T));
+                instance = FindObjectOfType<T>();
+                if (instance == null)
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = typeof(T).Name;
+                    instance = obj.AddComponent<T>();
+                }
             }
             return instance;
         }
     }
 
-}
+    public virtual void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this as T;
+        }
+        else
+        {
+            Debug.Log("destroying this game object for some reason..?");
+            Destroy(gameObject);
+            return;
+        }
+    }
 
+}

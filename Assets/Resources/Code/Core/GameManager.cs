@@ -1,17 +1,11 @@
 ﻿using UnityEngine;
-using Bolt;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager>,IEventObserver
 {
     //Reference to device type being used
     //For example, is a mobile phone or a PC?
     public DeviceType playerDeviceType;
-    public ScreenOrientation playerDeviceOrientation;
-
-
-
-
-
+    private ScreenOrientation playerDeviceOrientation;
 
     public DeviceType GetPlayerDeviceByType()
     {
@@ -27,11 +21,13 @@ public class GameManager : Singleton<GameManager>
         return currentDevice;
     }
 
-    public void Start()
+    public void Notified(EventName eventName)
     {
-        if(playerDeviceType == DeviceType.Handheld)
+        switch (eventName)
         {
-            Screen.orientation = playerDeviceOrientation;
+            case EventName.EnterLevel:
+                playerDeviceType = GetPlayerDeviceByType();
+                break;
         }
     }
 }

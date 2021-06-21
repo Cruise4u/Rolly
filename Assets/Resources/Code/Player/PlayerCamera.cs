@@ -10,13 +10,13 @@ public class PlayerCamera : Singleton<PlayerCamera>,IEventObserver
     private float cameraPitch;
     private float zoom;
     #endregion
-
     public void GetGlobalPlayerVariables()
     {
         playerCamera = FindObjectOfType<Camera>();
         viewTarget = FindObjectOfType<PlayerController>().gameObject;
+        Debug.Log(playerCamera);
+        Debug.Log(viewTarget);
     }
-
     public void Init()
     {
         GetGlobalPlayerVariables();
@@ -29,6 +29,7 @@ public class PlayerCamera : Singleton<PlayerCamera>,IEventObserver
         switch (eventName)
         {
             case EventName.EnterLevel:
+                Debug.Log("On Enter Level Event in PlayerCamera!");
                 Init();
                 break;
         }

@@ -8,6 +8,9 @@ TagManager:
   - Win
   - Defeat
   - Score
+  - Camera
+  - Jump
+  - Tutorial
   layers:
   - Default
   - TransparentFX
